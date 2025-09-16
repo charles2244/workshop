@@ -126,7 +126,7 @@ class _MonitorWorkloadPageState extends State<MonitorWorkloadPage> {
 
                         final workloads = snapshot.data!;
                     return DataTable(
-                      headingRowColor: MaterialStateProperty.all(Color(0xFF2C3E50)),
+                      headingRowColor: WidgetStateProperty.all(Color(0xFF2C3E50)),
                       columns: const [
                         DataColumn(label: Text('Name', style: TextStyle(color: Colors.white))),
                         DataColumn(label: Text('Jobs', style: TextStyle(color: Colors.white))),
