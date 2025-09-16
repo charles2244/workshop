@@ -152,15 +152,6 @@ class MyHomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final response = await Supabase.instance.client
-                          .from('Customers')
-                          .select();
-                      print(response);
-                    },
-                    child: const Text("Fetch Data"),
-                  ),
                 ],
               ),
             ),

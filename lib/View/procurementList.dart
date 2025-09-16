@@ -56,7 +56,7 @@ class _ProcurementPageState extends State<ProcurementPage> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Navigator.pop(context, 'refresh'),
                 ),
                 const Text("Procurement",
                   style: TextStyle(
@@ -134,11 +134,15 @@ class _ProcurementPageState extends State<ProcurementPage> {
                   Padding( // Add padding around the button container for spacing
                     padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 8),
                     child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
+                      onTap: () async {
+                        await Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const ProcurementRequestPage()),
+                          MaterialPageRoute(builder: (context) => ProcurementRequestPage()),
                         );
+
+                        // Reload procurement list when returning
+                        await loadProcurement();
+                        setState(() {});
                       },
                       child: Container(
                         width: double.infinity,
@@ -236,6 +240,7 @@ class _ProcurementPageState extends State<ProcurementPage> {
                       builder: (context) =>
                           ProcurementDetailPage(
                             procurementId: procurementId,
+                            partName: itemName,
                             requiredDate: date,
                             status: status,
                           ),

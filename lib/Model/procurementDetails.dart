@@ -2,30 +2,32 @@ class ProcurementDetails {
   final int id;
   final int quantity;
   final String remarks;
-  final DateTime receivedBy;
-  final String receivedImage;
-  final String procuremtnId;
+  final DateTime? receivedBy;
+  final String? receivedImage;
+  final int procurementId;
 
   ProcurementDetails({
     required this.id,
     required this.quantity,
     required this.remarks,
-    required this.receivedBy,
-    required this.receivedImage,
-    required this.procuremtnId,
+    this.receivedBy,
+    this.receivedImage,
+    required this.procurementId,
   });
 
-  // From JSON (for Supabase or API)
   factory ProcurementDetails.fromJson(Map<String, dynamic> json) {
+    DateTime? parsedReceivedBy;
+    if (json['received_by'] != null && json['received_by'] is String) {
+      parsedReceivedBy = DateTime.tryParse(json['received_by'] as String);
+    }
+
     return ProcurementDetails(
       id: json['pd_id'] ?? 0,
       quantity: (json['quantity'] ?? 0).toInt(),
-      remarks: json['remarks'] ?? 'Unknown',
-      receivedBy: json['received_by'] != null
-          ? DateTime.parse(json['used_at'].toString())
-          : DateTime.now(), // fallback if null
-      receivedImage: json['received_image'] ?? ' Image Not Found ',
-      procuremtnId: json['procurement_id'] ?? 'Unknown',
+      remarks: json['remarks'] ?? '- ',
+      receivedBy: parsedReceivedBy,
+      receivedImage: json['received_image'] ?? ' ',
+      procurementId: (json['procurement_id'] ?? 0) as int,
     );
   }
 }

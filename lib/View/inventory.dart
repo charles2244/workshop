@@ -14,12 +14,15 @@ class InventoryPage extends StatefulWidget {
 class _InventoryPageState extends State<InventoryPage> {
   final InventoryController controller = InventoryController();
   List<SparePart> spareParts = [];
+  int procurementRequestCount = 0;
+  bool isLoadingProcurements = true;
   bool isLoading = true;
   bool _sortAscendingByQty = true;
 
   @override
   void initState() {
     super.initState();
+    loadProcurementCount();
     loadSpareParts();
   }
 
@@ -29,6 +32,31 @@ class _InventoryPageState extends State<InventoryPage> {
       spareParts = parts;
       isLoading = false;
     });
+  }
+
+  Future<void> loadProcurementCount() async {
+    if (!mounted) return;
+    setState(() {
+      isLoadingProcurements = true;
+    });
+    try {
+      // Assuming your controller has a method to fetch all procurements
+      // or a method to get just the count.
+      // If it fetches all procurements:
+      final procurements = await controller.fetchProcurementList(); // Example method
+      if (!mounted) return;
+      setState(() {
+        procurementRequestCount = procurements.length;
+        isLoadingProcurements = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      print("Error loading procurement count: $e");
+      setState(() {
+        isLoadingProcurements = false;
+        // Optionally set procurementRequestCount to 0 or handle error display
+      });
+    }
   }
 
   void _sortSparePartsByQuantity() {
@@ -74,9 +102,15 @@ class _InventoryPageState extends State<InventoryPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             child: Row(
               children: [
-                _summaryCard(false, "Parts In Stock", spareParts.length.toString(), context),
+                _summaryCard(0, "Parts In Stock", spareParts.length.toString(), context, () async {
+                await loadSpareParts();
+                setState(() {});
+                },),
                 const SizedBox(width: 16),
-                _summaryCard(true, "Procurement Req.", "5", context),
+                _summaryCard(1, "Procurement Req.", isLoadingProcurements ? "0" : procurementRequestCount.toString(), context, () async {
+                  await loadProcurementCount();
+                  setState(() {});
+                },),
               ],
             ),
           ),
@@ -150,16 +184,27 @@ class _InventoryPageState extends State<InventoryPage> {
   }
 
   // Summary Card Widget
-  static Widget _summaryCard(bool isProcurement, String title, String value, BuildContext context) {
+  Widget _summaryCard(
+      int isProcurement,
+      String title,
+      String value,
+      BuildContext context,
+      Future<void> Function()? onRefresh, // New callback
+      ) {
     return Expanded(
       child: GestureDetector(
-        onTap: isProcurement // Check the condition here
-            ? () { // If true, provide this onTap callback
-          Navigator.push(
+        onTap: isProcurement == 1
+            ? () async {
+          final result = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => const ProcurementPage()), // Ensure ProcurementPage is correctly imported
+            MaterialPageRoute(builder: (_) => const ProcurementPage()),
           );
-        }: null,
+
+          if (result == 'refresh' && onRefresh != null) {
+            await onRefresh(); // Call the callback
+          }
+        }
+            : null,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
@@ -178,6 +223,7 @@ class _InventoryPageState extends State<InventoryPage> {
       ),
     );
   }
+
 
   // Spare Part Item Widget
   static Widget _sparePartItem(BuildContext context, SparePart part) {
