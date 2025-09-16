@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'inventory.dart';
+import 'package:workshop_manager/View/work_scheduller.dart';
+import 'package:workshop_manager/View/workload.dart';
+import 'inventory.dart'; // Assuming InventoryPage is correctly defined
+import '../Controls/workload_controller.dart';
+// workload_model.dart is likely used by WorkloadController and WorkSchedulerPage, so no direct import needed here unless MyHomePage uses it directly.
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Supabase.initialize(
@@ -10,11 +14,18 @@ void main() async{
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlYmF1enVzc3FobnJ6cHRma3NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTczMjc1MjcsImV4cCI6MjA3MjkwMzUyN30._ySYgOlA6cR_X3nXFDzsX7i-j2j86sQ0HrOYQbpHtVk',
   );
 
-  runApp(const MyApp());
+  final WorkloadController workloadController = WorkloadController(
+      'https://kebauzussqhnrzptfksi.supabase.co', // Or Supabase.instance.supabaseUrl if available and preferred
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlYmF1enVzc3FobnJ6cHRma3NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTczMjc1MjcsImV4cCI6MjA3MjkwMzUyN30._ySYgOlA6cR_X3nXFDzsX7i-j2j86sQ0HrOYQbpHtVk' // Or Supabase.instance.supabaseAnonKey
+  );
+
+  runApp(MyApp(workloadController: workloadController, controller: workloadController,)); // Pass controller to MyApp
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final WorkloadController workloadController;
+
+  const MyApp({super.key, required this.workloadController, required WorkloadController controller});
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +34,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(),
+      home: MyHomePage(workloadController: workloadController, controller: workloadController,),
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
+  final WorkloadController controller;
+
+  const MyHomePage({super.key, required this.controller, required WorkloadController workloadController});
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +50,7 @@ class MyHomePage extends StatelessWidget {
       backgroundColor: const Color(0xFF2c3e50),
       body: Column(
         children: [
-          SizedBox(height: 50),
-          // Top section (Logo + Company Name)
+          const SizedBox(height: 50),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -61,7 +73,6 @@ class MyHomePage extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          // Container for Job Management + Grid
           Expanded(
             child: Container(
               width: double.infinity,
@@ -106,7 +117,8 @@ class MyHomePage extends StatelessWidget {
                               height: 50,
                             ),
                             'Work\nScheduler',
-                            InventoryPage(),
+                            // Now 'controller' refers to the instance passed to MyHomePage
+                            WorkSchedulerPage(controller: controller),
                           ),
                           menuButton(
                             context,
@@ -116,7 +128,7 @@ class MyHomePage extends StatelessWidget {
                               height: 50,
                             ),
                             'Staff\nWorkload',
-                            InventoryPage(),
+                            MonitorWorkloadPage(controller: controller,),
                           ),
                           menuButton(
                             context,
@@ -135,7 +147,7 @@ class MyHomePage extends StatelessWidget {
                               width: 50,
                               height: 50,
                             ),
-                            'Work\nScheduler',
+                            'Inventory\nControl',
                             InventoryPage(),
                           ),
                           menuButton(

@@ -7,13 +7,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:workshop_manager/View/main.dart';
+import 'package:workshop_manager/Controls/workload_controller.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+    // Initialize a mock or test instance of WorkloadController
+    final controller = WorkloadController('test_url', 'test_anon_key');
+
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(controller: controller, workloadController: controller,));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
@@ -26,5 +29,17 @@ void main() {
     // Verify that our counter has incremented.
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
+  });
+
+  testWidgets('MyApp widget test', (WidgetTester tester) async {
+    // Initialize a mock or test instance of WorkloadController
+    final controller = WorkloadController('test_url', 'test_anon_key');
+
+    // Build the widget tree and trigger a frame
+    var workloadController;
+    await tester.pumpWidget(MyApp(controller: workloadController, workloadController: controller,));
+
+    // Verify the widget tree
+    expect(find.text('My App'), findsOneWidget);
   });
 }
