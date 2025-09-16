@@ -1,4 +1,3 @@
-// View/SparePartDetailPage.dart
 import 'package:flutter/material.dart';
 import '../Controls/inventory_controller.dart';
 import '../Model/usage_history_model.dart';
@@ -51,7 +50,7 @@ class _SparePartDetailPageState extends State<SparePartDetailPage> {
       backgroundColor: const Color(0xFF2c3e50),
       body: Column(
         children: [
-          // Top Bar
+          const SizedBox(height: 30),
           Row(
             children: [
               IconButton(

@@ -49,15 +49,15 @@ class _ProcurementPageState extends State<ProcurementPage> {
       backgroundColor: const Color(0xFF2c3e50),
       body: Column(
         children: [
-          // Top Bar
           Padding(
-            padding: const EdgeInsets.only(top: 40, left: 10),
+            padding: const EdgeInsets.only(top: 30),
             child: Row(
               children: [
                 IconButton(
                   icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () => Navigator.pop(context, 'refresh'),
                 ),
+                const SizedBox(width: 100),
                 const Text("Procurement",
                   style: TextStyle(
                   color: Colors.white,

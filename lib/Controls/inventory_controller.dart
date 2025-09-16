@@ -77,8 +77,8 @@ class InventoryController {
     required int procurementDetailId,
     required int quantity,
     required String remarks,
-    DateTime? receiveBy = null,
-    String? receivedImage = null,
+    DateTime? receiveBy,
+    String? receivedImage,
   }) async {
     try {
       // Data for Procurement table
@@ -88,7 +88,7 @@ class InventoryController {
         'supplier_name': sName,
         'request_date': requestDate,
         'status': status,
-        'managerer_id': managerId,
+        'managerer_id': managerId, // ✅ make sure column name matches DB
       };
 
       // Data for Procurement_details table
@@ -101,17 +101,15 @@ class InventoryController {
         'procurement_id': procurementId,
       };
 
-      // Insert into Procurement table first
-      final response1 = await supabase.from('Procurement').insert(data1);
+      final response1 = await supabase.from('Procurement').insert(data1).select();
+      final response2 = await supabase.from('Procurement_details').insert(data2).select();
 
-      // Insert into Procurement_details table second
-      final response2 = await supabase.from('Procurement_details').insert(data2);
-
-      // Check if both inserts succeeded
-      if (response1.isEmpty && response2.isEmpty) {
+      if (response1 != null && response2 != null) {
+        print("Procurement inserted: $response1");
+        print("Procurement_details inserted: $response2");
         return true;
       } else {
-        print("Insert failed: Procurement: $response1, Procurement_details: $response2");
+        print("Insert failed: response1=$response1, response2=$response2");
         return false;
       }
     } catch (e) {

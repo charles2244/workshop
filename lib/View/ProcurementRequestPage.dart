@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workshop_manager/View/successMessagePage.dart';
 import '../Controls/inventory_controller.dart';
 import '../Model/spare_part_model.dart';
 
@@ -17,7 +18,7 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
   String? customPartName;
   bool isOtherSelected = false;
   final TextEditingController remarksController = TextEditingController();
-  int selectedQuantity = 5;
+  int selectedQuantity = 1;
   final TextEditingController _numberController = TextEditingController();
 
   @override
@@ -46,13 +47,14 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
         children: [
           // Top Bar
           Padding(
-            padding: const EdgeInsets.only(top: 40, left: 10),
+            padding: const EdgeInsets.only(top: 30),
             child: Row(
               children: [
                 IconButton(
                   icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () => Navigator.pop(context),
                 ),
+                const SizedBox(width: 100),
                 const Text(
                   "Procurement",
                   style: TextStyle(
@@ -111,72 +113,82 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
                             vertical: 12,
                           ),
                         ),
-                        onPressed: () async {
-                          final partName =
-                              isOtherSelected
-                                  ? customPartName
-                                  : selectedPart?.name;
 
-                          if (partName == null || partName.isEmpty) {
+                        onPressed: () async {
+                          final partName = isOtherSelected ? customPartName : selectedPart?.name;
+
+                          if (partName == null || partName.trim().isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  "Please select or enter a spare part",
-                                ),
-                              ),
+                              const SnackBar(content: Text("Please select or enter a spare part")),
                             );
                             return;
                           }
 
-                          int lastId1 = await controller.fetchProcurementId();
-                          int newId1 = lastId1 + 1;
-
-                          int lastId = await controller.fetchProcurementDetailId();
-                          int newId = lastId + 1;
-
-                          bool success = await controller.insertProcurement(
-                            procurementId1: newId1,
-                            spName: partName,
-                            sName: "- ",
-                            requestDate: selectedDate.toString(),
-                            status: "Pending",
-                            managerId: 5001,
-
-                            procurementDetailId: newId,
-                            quantity: selectedQuantity,
-                            remarks: remarksController.text,
-                            receiveBy: null,
-                            receivedImage: null,
-                            procurementId: newId1,
-                          );
-
-                          if (success) {
+                          if (selectedQuantity == 0) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  "Request submitted successfully!",
-                                ),
-                              ),
+                              const SnackBar(content: Text("Quantity cannot be zero.")),
                             );
+                          }else {
+                            // Show confirmation dialog before submitting
+                            await _showConfirmationDialog(
+                              context,
+                              partName,
+                              selectedQuantity,
+                              "${selectedDate.toLocal()}".split(' ')[0],
+                              remarksController.text,
+                                  () async {
+                                int lastId1 = await controller
+                                    .fetchProcurementId();
+                                int newId1 = lastId1 + 1;
 
-                            // Reset form
-                            setState(() {
-                              selectedPart =
-                                  spareParts.isNotEmpty
-                                      ? spareParts.first
-                                      : null;
-                              selectedQuantity = 1;
-                              _numberController.text = "1";
-                              remarksController.clear();
-                            });
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content:
-                                Text("Failed to submit request"),
-                              ),
+                                int lastId = await controller
+                                    .fetchProcurementDetailId();
+                                int newId = lastId + 1;
+
+                                bool success = await controller
+                                    .insertProcurement(
+                                  procurementId1: newId1,
+                                  spName: partName,
+                                  sName: "- ",
+                                  requestDate: selectedDate.toString(),
+                                  status: "Pending",
+                                  managerId: 5001,
+                                  procurementDetailId: newId,
+                                  quantity: selectedQuantity,
+                                  remarks: remarksController.text,
+                                  receiveBy: null,
+                                  receivedImage: null,
+                                  procurementId: newId1,
+                                );
+
+                                if (success) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const ProcurementSuccessPage(message: "Procurement Request"),
+                                    ),
+                                  );
+
+                                  // Reset form
+                                  setState(() {
+                                    selectedPart = spareParts.isNotEmpty
+                                        ? spareParts.first
+                                        : null;
+                                    selectedQuantity = 1;
+                                    _numberController.text = "1";
+                                    remarksController.clear();
+                                  });
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text(
+                                        "Failed to submit request")),
+                                  );
+                                }
+
+                                print(
+                                    "Procurement submitted successfully with Procurement ID: $newId1 and Detail ID: $newId");
+                              },
                             );
-                            print("Procurement submitted successfully with Procurement ID: $newId1 and Detail ID: $newId");
                           }
                         },
                         child: const Text(
@@ -353,6 +365,72 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
           borderSide: BorderSide(color: Colors.grey.shade400),
         ),
       ),
+    );
+  }
+
+  Future<void> _showConfirmationDialog(BuildContext context, String partName, int qty, String requiredBy, String remarks, Function onConfirm) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text(
+            "Submit Request",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text("Please Review The Details Below. Is All The Information Correct?\n"),
+              Text("Part Name: $partName", style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text("Qty: $qty", style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text("Required By: $requiredBy", style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text("Remarks: $remarks", style: const TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          ),
+          actions: [
+            SizedBox(
+              width: double.infinity,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[700],
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // close dialog
+                        onConfirm(); // call your submit function
+                      },
+                      child: const Text(
+                        "Confirm",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10), // space between buttons
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[300],
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                      onPressed: () => Navigator.of(context).pop(), // close dialog
+                      child: const Text("Cancel"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

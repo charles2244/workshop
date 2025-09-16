@@ -56,14 +56,14 @@ class ProcurementDetailPage extends StatelessWidget {
             children: [
               // Top Bar
               Padding(
-                padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
+                padding: const EdgeInsets.only(top: 30),
                 child: Row(
                   children: [
                     IconButton(
                       icon: const Icon(Icons.arrow_back, color: Colors.white),
                       onPressed: () => Navigator.pop(context),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 100),
                     const Text(
                       "Procurement",
                       style: TextStyle(

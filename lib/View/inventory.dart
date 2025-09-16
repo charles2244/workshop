@@ -78,7 +78,7 @@ class _InventoryPageState extends State<InventoryPage> {
       backgroundColor: const Color(0xFF2c3e50),
       body: Column(
         children: [
-          // Top Bar
+          const SizedBox(height: 30),
           Row(
             children: [
               IconButton(
