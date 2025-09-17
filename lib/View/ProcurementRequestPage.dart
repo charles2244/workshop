@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workshop_manager/View/successMessagePage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Controls/inventory_controller.dart';
 import '../Model/spare_part_model.dart';
 
@@ -20,12 +21,14 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
   final TextEditingController remarksController = TextEditingController();
   int selectedQuantity = 1;
   final TextEditingController _numberController = TextEditingController();
+  late int userId;
 
   @override
   void initState() {
     super.initState();
     loadSpareParts();
     _numberController.text = selectedQuantity.toString();
+    _loadUserId();
   }
 
   /// Load spare parts from the database
@@ -37,6 +40,20 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
         selectedPart = spareParts.first; // Default to first item
       }
     });
+  }
+
+  Future<void> _loadUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final int? id = prefs.getInt('user_id');
+    setState(() {
+      userId = id!; // Store in state variable
+    });
+    if (userId != null) {
+      print('User ID: $userId');
+      // Do something with userId
+    } else {
+      print('No user ID found');
+    }
   }
 
   @override
@@ -152,7 +169,7 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
                                   sName: "- ",
                                   requestDate: selectedDate.toString(),
                                   status: "Pending",
-                                  managerId: 5001,
+                                  managerId: userId,
                                   procurementDetailId: newId,
                                   quantity: selectedQuantity,
                                   remarks: remarksController.text,

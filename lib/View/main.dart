@@ -4,7 +4,9 @@ import 'package:workshop_manager/View/work_scheduller.dart';
 import 'package:workshop_manager/View/workload.dart';
 import 'inventory.dart'; // Assuming InventoryPage is correctly defined
 import '../Controls/workload_controller.dart';
-// workload_model.dart is likely used by WorkloadController and WorkSchedulerPage, so no direct import needed here unless MyHomePage uses it directly.
+import 'login.dart';
+
+late WorkloadController workloadController;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,18 +16,27 @@ void main() async {
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlYmF1enVzc3FobnJ6cHRma3NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTczMjc1MjcsImV4cCI6MjA3MjkwMzUyN30._ySYgOlA6cR_X3nXFDzsX7i-j2j86sQ0HrOYQbpHtVk',
   );
 
-  final WorkloadController workloadController = WorkloadController(
+  workloadController = WorkloadController(
       'https://kebauzussqhnrzptfksi.supabase.co', // Or Supabase.instance.supabaseUrl if available and preferred
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlYmF1enVzc3FobnJ6cHRma3NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTczMjc1MjcsImV4cCI6MjA3MjkwMzUyN30._ySYgOlA6cR_X3nXFDzsX7i-j2j86sQ0HrOYQbpHtVk' // Or Supabase.instance.supabaseAnonKey
   );
 
-  runApp(MyApp(workloadController: workloadController, controller: workloadController,)); // Pass controller to MyApp
+  runApp(const AppInitializer());
 }
 
-class MyApp extends StatelessWidget {
-  final WorkloadController workloadController;
+class AppInitializer extends StatelessWidget {
+  const AppInitializer({super.key});
 
-  const MyApp({super.key, required this.workloadController, required WorkloadController controller});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: FingerprintLoginScreen(),
+    );
+  }
+}
+class MyApp extends StatelessWidget {
+
+  const MyApp({super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +45,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: MyHomePage(workloadController: workloadController, controller: workloadController,),
+      home: MyHomePage(controller: workloadController),
     );
   }
 }
@@ -42,7 +53,7 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   final WorkloadController controller;
 
-  const MyHomePage({super.key, required this.controller, required WorkloadController workloadController});
+  const MyHomePage({super.key, required this.controller,});
 
   @override
   Widget build(BuildContext context) {
