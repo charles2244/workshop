@@ -3,6 +3,7 @@ import 'package:workshop_manager/View/work_scheduller.dart';
 import '../Controls/inventory_controller.dart';
 import '../Model/usage_history_model.dart';
 import 'inventory.dart';
+import 'invoice_management_screen.dart';
 import 'main.dart';
 
 class SparePartDetailPage extends StatefulWidget {
@@ -64,6 +65,12 @@ class _SparePartDetailPageState extends State<SparePartDetailPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => WorkSchedulerPage(controller: workloadController)),
+        );
+        break;
+      case 3:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => InvoiceManagementScreen()),
         );
         break;
       case 4:
@@ -202,7 +209,7 @@ class _SparePartDetailPageState extends State<SparePartDetailPage> {
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.local_gas_station),
+            icon: Icon(Icons.receipt),
             label: '',
           ),
           BottomNavigationBarItem(

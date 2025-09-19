@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workshop_manager/View/procurementList.dart';
 import 'package:workshop_manager/View/work_scheduller.dart';
+import 'invoice_management_screen.dart';
 import 'main.dart'; // Import your home page
 import '../Controls/inventory_controller.dart';
 import '../Model/spare_part_model.dart';
@@ -85,6 +86,12 @@ class _InventoryPageState extends State<InventoryPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => WorkSchedulerPage(controller: workloadController)),
+        );
+        break;
+      case 3:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => InvoiceManagementScreen()),
         );
         break;
       case 4:
@@ -216,7 +223,7 @@ class _InventoryPageState extends State<InventoryPage> {
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.local_gas_station),
+            icon: Icon(Icons.receipt),
             label: '',
           ),
           BottomNavigationBarItem(

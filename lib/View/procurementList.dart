@@ -5,6 +5,7 @@ import '../Model/procurement.dart';
 import 'ProcurementDetailPage.dart';
 import 'ProcurementRequestPage.dart';
 import 'inventory.dart';
+import 'invoice_management_screen.dart';
 import 'main.dart';
 
 class ProcurementPage extends StatefulWidget {
@@ -41,6 +42,12 @@ class _ProcurementPageState extends State<ProcurementPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => WorkSchedulerPage(controller: workloadController)),
+        );
+        break;
+      case 3:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => InvoiceManagementScreen()),
         );
         break;
       case 4:
@@ -233,7 +240,7 @@ class _ProcurementPageState extends State<ProcurementPage> {
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.local_gas_station),
+            icon: Icon(Icons.receipt),
             label: '',
           ),
           BottomNavigationBarItem(

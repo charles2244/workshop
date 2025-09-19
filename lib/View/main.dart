@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workshop_manager/View/work_scheduller.dart';
 import 'package:workshop_manager/View/workload.dart';
+import 'crm_management_screen.dart';
+import 'invoice_management_screen.dart';
 import 'vehicle.dart';
-import 'inventory.dart'; // Assuming InventoryPage is correctly defined
+import 'inventory.dart';
 import '../Controls/workload_controller.dart';
 import 'login.dart';
 
@@ -18,7 +20,7 @@ void main() async {
   );
 
   workloadController = WorkloadController(
-      'https://kebauzussqhnrzptfksi.supabase.co', // Or Supabase.instance.supabaseUrl if available and preferred
+      'https://kebauzussqhnrzptfksi.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlYmF1enVzc3FobnJ6cHRma3NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTczMjc1MjcsImV4cCI6MjA3MjkwMzUyN30._ySYgOlA6cR_X3nXFDzsX7i-j2j86sQ0HrOYQbpHtVk' // Or Supabase.instance.supabaseAnonKey
   );
 
@@ -150,7 +152,7 @@ class MyHomePage extends StatelessWidget {
                               height: 50,
                             ),
                             'Invoice\nManagement',
-                            InventoryPage(),
+                            InvoiceManagementScreen(),
                           ),
                           menuButton(
                             context,
@@ -170,7 +172,7 @@ class MyHomePage extends StatelessWidget {
                               height: 50,
                             ),
                             'Customer Relationship\nManagement',
-                            CustomersPage(),
+                            CrmManagementScreen(),
                           ),
                         ],
                       ),

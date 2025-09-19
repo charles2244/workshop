@@ -3,6 +3,7 @@ import 'package:workshop_manager/View/work_scheduller.dart';
 import '../Controls/workload_controller.dart';
 import '../Model/workload_model.dart';
 import 'inventory.dart';
+import 'invoice_management_screen.dart';
 import 'main.dart';
 import 'workloaddetails.dart';
 
@@ -47,6 +48,12 @@ class _MonitorWorkloadPageState extends State<MonitorWorkloadPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => WorkSchedulerPage(controller: workloadController)),
+        );
+        break;
+      case 3:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => InvoiceManagementScreen()),
         );
         break;
       case 4:
@@ -246,7 +253,7 @@ class _MonitorWorkloadPageState extends State<MonitorWorkloadPage> {
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.local_gas_station),
+            icon: Icon(Icons.receipt),
             label: '',
           ),
           BottomNavigationBarItem(
