@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:workshop_manager/View/work_scheduller.dart';
 import '../Controls/inventory_controller.dart';
 import '../Model/usage_history_model.dart';
+import 'inventory.dart';
+import 'main.dart';
 
 class SparePartDetailPage extends StatefulWidget {
   final int sparePartId;
   final String name;
   final int qty;
+
 
   const SparePartDetailPage({
     super.key,
@@ -22,6 +26,7 @@ class _SparePartDetailPageState extends State<SparePartDetailPage> {
   final InventoryController controller = InventoryController();
   List<UsageHistory> usageHistory = [];
   bool isLoading = true;
+  int _selectedIndex = 4;
 
   @override
   void initState() {
@@ -41,6 +46,32 @@ class _SparePartDetailPageState extends State<SparePartDetailPage> {
       setState(() {
         isLoading = false; // Prevent infinite loading even on error
       });
+    }
+  }
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MyApp()),
+        );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => WorkSchedulerPage(controller: workloadController)),
+        );
+        break;
+      case 4:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => InventoryPage()),
+        );
+        break;
     }
   }
 
@@ -145,6 +176,38 @@ class _SparePartDetailPageState extends State<SparePartDetailPage> {
                 ],
               ),
             ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color(0xFF2c3e50),
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.white,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        onTap: _onItemTapped,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.directions_car),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_gas_station),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.apartment),
+            label: '',
           ),
         ],
       ),

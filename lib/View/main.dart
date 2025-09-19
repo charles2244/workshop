@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:workshop_manager/View/work_scheduller.dart';
 import 'package:workshop_manager/View/workload.dart';
+import 'vehicle.dart';
 import 'inventory.dart'; // Assuming InventoryPage is correctly defined
 import '../Controls/workload_controller.dart';
 import 'login.dart';
@@ -118,7 +119,7 @@ class MyHomePage extends StatelessWidget {
                               height: 50,
                             ),
                             'Vehicle\nManagement',
-                            InventoryPage(),
+                            CustomersPage(),
                           ),
                           menuButton(
                             context,
@@ -169,7 +170,7 @@ class MyHomePage extends StatelessWidget {
                               height: 50,
                             ),
                             'Customer Relationship\nManagement',
-                            InventoryPage(),
+                            CustomersPage(),
                           ),
                         ],
                       ),

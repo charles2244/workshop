@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:workshop_manager/View/work_scheduller.dart';
 import '../Controls/inventory_controller.dart';
 import '../Model/procurement.dart';
 import 'ProcurementDetailPage.dart';
 import 'ProcurementRequestPage.dart';
+import 'inventory.dart';
+import 'main.dart';
 
 class ProcurementPage extends StatefulWidget {
   const ProcurementPage({super.key});
@@ -15,11 +18,38 @@ class _ProcurementPageState extends State<ProcurementPage> {
   final InventoryController controller = InventoryController();
   List<Procurement> procurementList = [];
   bool isLoading = true;
+  int _selectedIndex = 4;
 
   @override
   void initState() {
     super.initState();
     loadProcurement();
+  }
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MyApp()),
+        );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => WorkSchedulerPage(controller: workloadController)),
+        );
+        break;
+      case 4:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => InventoryPage()),
+        );
+        break;
+    }
   }
 
   Future<void> loadProcurement() async {
@@ -178,6 +208,38 @@ class _ProcurementPageState extends State<ProcurementPage> {
             ),
           ),
 
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color(0xFF2c3e50),
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.white,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        onTap: _onItemTapped,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.directions_car),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_gas_station),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.apartment),
+            label: '',
+          ),
         ],
       ),
     );

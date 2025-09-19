@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:workshop_manager/View/work_scheduller.dart';
 import '../Controls/workload_controller.dart';
 import '../Model/workload_model.dart';
+import 'inventory.dart';
+import 'main.dart';
 import 'workloaddetails.dart';
 
 class MonitorWorkloadPage extends StatefulWidget {
@@ -15,6 +18,7 @@ class MonitorWorkloadPage extends StatefulWidget {
 class _MonitorWorkloadPageState extends State<MonitorWorkloadPage> {
   DateTime _selectedDate = DateTime.now();
   late Future<List<WorkloadModel>> _workloads;
+  int _selectedIndex = 4;
 
   @override
   void initState() {
@@ -27,7 +31,32 @@ class _MonitorWorkloadPageState extends State<MonitorWorkloadPage> {
       _workloads = widget.controller.fetchWorkloadsForDate(_selectedDate);
     });
   }
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
 
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MyApp()),
+        );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => WorkSchedulerPage(controller: workloadController)),
+        );
+        break;
+      case 4:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => InventoryPage()),
+        );
+        break;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,9 +164,9 @@ class _MonitorWorkloadPageState extends State<MonitorWorkloadPage> {
                       ],
                       rows: workloads.map((workload) {
                         int jobsCompleted = workload.jobsCompleted ?? 0;
-                        int totalJobs = 5; // ✅ always 5 jobs max per mechanic
+                        int totalJobs = 5;
 
-                        // --- Status coloring logic ---
+                        //Status coloring logic
                         Color statusColor;
                         String status;
 
@@ -191,6 +220,38 @@ class _MonitorWorkloadPageState extends State<MonitorWorkloadPage> {
                 ],
               ),
             ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color(0xFF2c3e50),
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.white,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        onTap: _onItemTapped,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.directions_car),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_gas_station),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.apartment),
+            label: '',
           ),
         ],
       ),
