@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workshop_manager/View/procurementList.dart';
+import 'package:workshop_manager/View/work_scheduller.dart';
+import 'main.dart'; // Import your home page
 import '../Controls/inventory_controller.dart';
 import '../Model/spare_part_model.dart';
 import 'SparePartDetailPage.dart';
@@ -18,6 +20,7 @@ class _InventoryPageState extends State<InventoryPage> {
   bool isLoadingProcurements = true;
   bool isLoading = true;
   bool _sortAscendingByQty = true;
+  int _selectedIndex = 4;
 
   @override
   void initState() {
@@ -40,10 +43,7 @@ class _InventoryPageState extends State<InventoryPage> {
       isLoadingProcurements = true;
     });
     try {
-      // Assuming your controller has a method to fetch all procurements
-      // or a method to get just the count.
-      // If it fetches all procurements:
-      final procurements = await controller.fetchProcurementList(); // Example method
+      final procurements = await controller.fetchProcurementList();
       if (!mounted) return;
       setState(() {
         procurementRequestCount = procurements.length;
@@ -54,7 +54,6 @@ class _InventoryPageState extends State<InventoryPage> {
       print("Error loading procurement count: $e");
       setState(() {
         isLoadingProcurements = false;
-        // Optionally set procurementRequestCount to 0 or handle error display
       });
     }
   }
@@ -62,14 +61,39 @@ class _InventoryPageState extends State<InventoryPage> {
   void _sortSparePartsByQuantity() {
     setState(() {
       if (_sortAscendingByQty) {
-        spareParts.sort((a, b) => a.qty.compareTo(b.qty)); // Sort ascending
+        spareParts.sort((a, b) => a.qty.compareTo(b.qty));
       } else {
-        spareParts.sort((a, b) => b.qty.compareTo(a.qty)); // Sort descending
+        spareParts.sort((a, b) => b.qty.compareTo(a.qty));
       }
-      _sortAscendingByQty = !_sortAscendingByQty; // Toggle for next click
-      // If you want to rotate through ascending, descending, and unsorted,
-      // you'll need more complex logic for the toggle.
+      _sortAscendingByQty = !_sortAscendingByQty;
     });
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MyApp()),
+        );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => WorkSchedulerPage(controller: workloadController)),
+        );
+        break;
+      case 4:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => InventoryPage()),
+        );
+        break;
+    }
   }
 
   @override
@@ -96,26 +120,22 @@ class _InventoryPageState extends State<InventoryPage> {
               ),
             ],
           ),
-
-          // Summary Cards
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             child: Row(
               children: [
                 _summaryCard(0, "Parts In Stock", spareParts.length.toString(), context, () async {
-                await loadSpareParts();
-                setState(() {});
-                },),
+                  await loadSpareParts();
+                  setState(() {});
+                }),
                 const SizedBox(width: 16),
                 _summaryCard(1, "Procurement Req.", isLoadingProcurements ? "0" : procurementRequestCount.toString(), context, () async {
                   await loadProcurementCount();
                   setState(() {});
-                },),
+                }),
               ],
             ),
           ),
-
-          // Spare Parts Container
           Expanded(
             child: Container(
               decoration: const BoxDecoration(
@@ -125,9 +145,8 @@ class _InventoryPageState extends State<InventoryPage> {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: Column( // Added Column to hold header and ListView
+              child: Column(
                 children: [
-                  // Spare Parts Header
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     child: Row(
@@ -143,26 +162,20 @@ class _InventoryPageState extends State<InventoryPage> {
                             ),
                           ],
                         ),
-                        InkWell( // Wrap the Row containing Qty and Icon with InkWell
-                          onTap: _sortSparePartsByQuantity, // Call sort method on tap
+                        InkWell(
+                          onTap: _sortSparePartsByQuantity,
                           child: Row(
-                            children: [
+                            children: const [
                               Text("Qty", style: TextStyle(fontWeight: FontWeight.bold)),
                               SizedBox(width: 5),
-                              Icon(
-                                Icons.swap_vert,
-                                size: 18,
-                                // Optionally change icon based on sort direction
-                                // color: _sortAscendingByQty ? Colors.blue : Colors.grey,
-                              ),
+                              Icon(Icons.swap_vert, size: 18),
                             ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  // Existing ListView or Loading Indicator
-                  Expanded( // Added Expanded so ListView takes remaining space
+                  Expanded(
                     child: isLoading
                         ? const Center(child: CircularProgressIndicator())
                         : ListView.builder(
@@ -180,16 +193,47 @@ class _InventoryPageState extends State<InventoryPage> {
           ),
         ],
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color(0xFF2c3e50),
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.white,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        onTap: _onItemTapped,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.directions_car),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_gas_station),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.apartment),
+            label: '',
+          ),
+        ],
+      ),
     );
   }
 
-  // Summary Card Widget
   Widget _summaryCard(
       int isProcurement,
       String title,
       String value,
       BuildContext context,
-      Future<void> Function()? onRefresh, // New callback
+      Future<void> Function()? onRefresh,
       ) {
     return Expanded(
       child: GestureDetector(
@@ -199,9 +243,8 @@ class _InventoryPageState extends State<InventoryPage> {
             context,
             MaterialPageRoute(builder: (_) => const ProcurementPage()),
           );
-
           if (result == 'refresh' && onRefresh != null) {
-            await onRefresh(); // Call the callback
+            await onRefresh();
           }
         }
             : null,
@@ -224,8 +267,6 @@ class _InventoryPageState extends State<InventoryPage> {
     );
   }
 
-
-  // Spare Part Item Widget
   static Widget _sparePartItem(BuildContext context, SparePart part) {
     return GestureDetector(
       onTap: () {
