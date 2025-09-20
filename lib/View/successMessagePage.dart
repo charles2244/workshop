@@ -33,8 +33,6 @@ class _ProcurementSuccessPageState extends State<ProcurementSuccessPage> {
         setState(() {
           showMessage = true;
         });
-
-        // Auto navigate back after 1 second
         Future.delayed(const Duration(seconds: 2), () {
           Navigator.pop(context);
         });

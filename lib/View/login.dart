@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:local_auth/local_auth.dart';
 import 'dart:math';
 import '../Controls/User_control.dart';
-import 'main.dart'; // ✅ Import for random number generation
+import 'main.dart';
 
 class FingerprintLoginScreen extends StatefulWidget {
   @override
@@ -59,7 +59,7 @@ class _FingerprintLoginScreenState extends State<FingerprintLoginScreen> {
     }
 
     if (_authenticated) {
-      return MyApp(); // Now load MyApp AFTER authentication
+      return MyApp();
     }
 
     return const Scaffold(

@@ -81,14 +81,13 @@ class InventoryController {
     String? receivedImage,
   }) async {
     try {
-      // Data for Procurement table
       final data1 = {
         'procurement_id': procurementId1,
         'sparepart_name': spName,
         'supplier_name': sName,
         'request_date': requestDate,
         'status': status,
-        'managerer_id': managerId, // ✅ make sure column name matches DB
+        'managerer_id': managerId,
       };
 
       // Data for Procurement_details table

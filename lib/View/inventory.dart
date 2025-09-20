@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:workshop_manager/View/procurementList.dart';
 import 'package:workshop_manager/View/work_scheduller.dart';
 import 'invoice_management_screen.dart';
-import 'main.dart'; // Import your home page
+import 'main.dart';
 import '../Controls/inventory_controller.dart';
 import '../Model/spare_part_model.dart';
 import 'SparePartDetailPage.dart';

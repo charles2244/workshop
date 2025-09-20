@@ -137,7 +137,6 @@ class ProcurementDetailPage extends StatelessWidget {
   }
 
   Widget buildDetailItem(String label, String value) {
-    // Check if the value looks like an image URL
     bool isImage = value.startsWith("http") &&
         (value.endsWith(".webp") || value.endsWith(".jpg") || value.endsWith(".jpeg") || value.endsWith(".png") || value.endsWith(".gif"));
 

@@ -40,12 +40,12 @@ class _SparePartDetailPageState extends State<SparePartDetailPage> {
       final history = await controller.fetchUsageHistory(widget.sparePartId);
       setState(() {
         usageHistory = history;
-        isLoading = false; // Ensure this always runs
+        isLoading = false;
       });
     } catch (e) {
       print("Error fetching usage history: $e");
       setState(() {
-        isLoading = false; // Prevent infinite loading even on error
+        isLoading = false;
       });
     }
   }
@@ -129,30 +129,24 @@ class _SparePartDetailPageState extends State<SparePartDetailPage> {
                 ),
               ),
               child: Column(
-                // This Column already exists or should exist to hold multiple children
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                // Optional: if you want the text/header to stretch
                 children: [
-                  // Spare Part Name Header
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 16,
                     ),
                     child: Text(
-                      // REMOVE 'const'
-                      widget.name, // Display the name of the current spare part
-                      textAlign: TextAlign.center, // Center the text
+                      widget.name,
+                      textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                         color:
-                            Colors
-                                .black87, // Ensure good contrast on white background
+                            Colors.black87,
                       ),
                     ),
                   ),
-                  // Optional: Separator Line
                   Container(
                     height: 1,
                     margin: const EdgeInsets.symmetric(
@@ -161,8 +155,6 @@ class _SparePartDetailPageState extends State<SparePartDetailPage> {
                     ),
                     color: Colors.grey.shade300,
                   ),
-
-                  // Existing Usage History List (or loading indicator)
                   Expanded(
                     child:
                         isLoading

@@ -31,13 +31,12 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
     _loadUserId();
   }
 
-  /// Load spare parts from the database
   Future<void> loadSpareParts() async {
     final parts = await controller.fetchSpareParts();
     setState(() {
       spareParts = parts;
       if (spareParts.isNotEmpty) {
-        selectedPart = spareParts.first; // Default to first item
+        selectedPart = spareParts.first;
       }
     });
   }
@@ -46,7 +45,7 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
     final prefs = await SharedPreferences.getInstance();
     final int? id = prefs.getInt('user_id');
     setState(() {
-      userId = id!; // Store in state variable
+      userId = id!;
     });
     if (userId != null) {
       print('User ID: $userId');
@@ -103,7 +102,7 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
                     _buildLabel("Part Name"),
                     spareParts.isEmpty
                         ? const Center(child: CircularProgressIndicator())
-                        : _buildPartDropdown(), // Show parts from DB
+                        : _buildPartDropdown(),
                     const SizedBox(height: 16),
 
                     _buildLabel("Quantity"),
@@ -146,7 +145,6 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
                               const SnackBar(content: Text("Quantity cannot be zero.")),
                             );
                           }else {
-                            // Show confirmation dialog before submitting
                             await _showConfirmationDialog(
                               context,
                               partName,
@@ -186,7 +184,6 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
                                     ),
                                   );
 
-                                  // Reset form
                                   setState(() {
                                     selectedPart = spareParts.isNotEmpty
                                         ? spareParts.first
@@ -275,7 +272,6 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
           ),
         ),
 
-        // Show TextField if "Other" is selected
         if (isOtherSelected) ...[
           const SizedBox(height: 10),
           TextField(
@@ -298,7 +294,6 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
       ),
       child: Row(
         children: [
-          // Number text field
           Expanded(
             child: TextField(
               controller: _numberController,
@@ -312,8 +307,6 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
               },
             ),
           ),
-
-          // Up/Down arrows
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -343,7 +336,6 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
     );
   }
 
-  /// Date Picker
   Widget _buildDatePicker(BuildContext context) {
     return InkWell(
       onTap: () async {
@@ -388,7 +380,7 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
   Future<void> _showConfirmationDialog(BuildContext context, String partName, int qty, String requiredBy, String remarks, Function onConfirm) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -421,8 +413,8 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
                       onPressed: () {
-                        Navigator.of(context).pop(); // close dialog
-                        onConfirm(); // call your submit function
+                        Navigator.of(context).pop();
+                        onConfirm();
                       },
                       child: const Text(
                         "Confirm",
@@ -430,7 +422,7 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10), // space between buttons
+                  const SizedBox(height: 10),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -438,7 +430,7 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
                         backgroundColor: Colors.grey[300],
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
-                      onPressed: () => Navigator.of(context).pop(), // close dialog
+                      onPressed: () => Navigator.of(context).pop(),
                       child: const Text("Cancel"),
                     ),
                   ),

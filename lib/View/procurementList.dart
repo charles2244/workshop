@@ -105,7 +105,6 @@ class _ProcurementPageState extends State<ProcurementPage> {
               ],
             ),
           ),
-          // Procurement Request Count
           Container(
             margin: const EdgeInsets.symmetric(vertical: 16),
             padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 8),
@@ -113,13 +112,11 @@ class _ProcurementPageState extends State<ProcurementPage> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: RichText( // <--- USE RichText
-              textAlign: TextAlign.center, // textAlign can be applied to RichText
+            child: RichText(
+              textAlign: TextAlign.center,
               text: TextSpan(
-                // Default style for any text that doesn't have its own specific style
-                // This style will apply to the newline character '\n' if not handled otherwise
                 style: const TextStyle(
-                  color: Colors.black, // Default color if not overridden
+                  color: Colors.black,
                   height: 1.8,
                 ),
                 children: <TextSpan>[
@@ -143,11 +140,8 @@ class _ProcurementPageState extends State<ProcurementPage> {
               ),
             ),
           ),
-
-          // White Container for Procurement List
           Expanded(
             child: Container(
-              // Removed padding from here, will apply to Column or ListView instead
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -155,14 +149,14 @@ class _ProcurementPageState extends State<ProcurementPage> {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: Column( // Wrap ListView and Button in a Column
+              child: Column(
                 children: [
-                  Expanded( // Make the ListView take available space
-                    child: Padding( // Added padding around the list/loader
+                  Expanded(
+                    child: Padding(
                       padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 0),
                       child: isLoading
                           ? const Center(child: CircularProgressIndicator())
-                          : procurementList.isEmpty && !isLoading // Handle empty list case
+                          : procurementList.isEmpty && !isLoading
                           ? const Center(
                           child: Text(
                             "No procurement requests found.",
@@ -170,16 +164,14 @@ class _ProcurementPageState extends State<ProcurementPage> {
                           )
                       )
                           : ListView.builder(
-                        // No need for itemExtent if rows have dynamic height
                         itemCount: procurementList.length,
                         itemBuilder: (context, index) {
                           final item = procurementList[index];
-                          // Assuming your _procurementItem needs the whole 'item' for details page navigation
                           return _procurementItem(
                             item.id,
                             item.spName,
                             item.sName,
-                            item.requestDate.toString().substring(0, 10), // Format date
+                            item.requestDate.toString().substring(0, 10),
                             item.status,
                             context,
                           );
@@ -187,8 +179,7 @@ class _ProcurementPageState extends State<ProcurementPage> {
                       ),
                     ),
                   ),
-                  // Request Procurement Button
-                  Padding( // Add padding around the button container for spacing
+                  Padding(
                     padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 8),
                     child: GestureDetector(
                       onTap: () async {
@@ -196,15 +187,12 @@ class _ProcurementPageState extends State<ProcurementPage> {
                           context,
                           MaterialPageRoute(builder: (context) => ProcurementRequestPage()),
                         );
-
-                        // Reload procurement list when returning
                         await loadProcurement();
                         setState(() {});
                       },
                       child: Container(
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        // margin: const EdgeInsets.only(top: 10), // Margin can be handled by the Padding above
                         decoration: BoxDecoration(
                           color: Colors.blueGrey.shade300,
                           borderRadius: BorderRadius.circular(10),
@@ -272,7 +260,6 @@ class _ProcurementPageState extends State<ProcurementPage> {
     );
   }
 
-  // Procurement Item Widget
   Widget _procurementItem(int procurementId, String itemName, String supplier, String date, String status, BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(12),

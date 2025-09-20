@@ -33,6 +33,7 @@ class AppInitializer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: FingerprintLoginScreen(),
     );
   }
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
@@ -69,16 +71,16 @@ class MyHomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: 60,
+                height: 90,
                 child: Image.asset('assets/images/GS_logo.png', width: 100),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(width: 19),
               const Text(
                 'Greenstem Business\nSoftware Sdn Bhd',
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: 19,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -110,67 +112,42 @@ class MyHomePage extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: GridView.count(
                         crossAxisCount: 2,
-                        mainAxisSpacing: 20,
-                        crossAxisSpacing: 20,
+                        mainAxisSpacing: 45,
+                        crossAxisSpacing: 45,
                         children: [
                           menuButton(
                             context,
-                            Image.asset(
-                              'assets/images/warehouse(2).png',
-                              width: 50,
-                              height: 50,
-                            ),
+                            const Icon(Icons.directions_car, size: 50, color: Colors.white),
                             'Vehicle\nManagement',
                             CustomersPage(),
                           ),
                           menuButton(
                             context,
-                            Image.asset(
-                              'assets/images/warehouse(2).png',
-                              width: 50,
-                              height: 50,
-                            ),
+                            const Icon(Icons.calendar_today, size: 50, color: Colors.white),
                             'Work\nScheduler',
-                            // Now 'controller' refers to the instance passed to MyHomePage
                             WorkSchedulerPage(controller: controller),
                           ),
                           menuButton(
                             context,
-                            Image.asset(
-                              'assets/images/warehouse(2).png',
-                              width: 50,
-                              height: 50,
-                            ),
+                            const Icon(Icons.person, size: 50, color: Colors.white),
                             'Staff\nWorkload',
                             MonitorWorkloadPage(controller: controller,),
                           ),
                           menuButton(
                             context,
-                            Image.asset(
-                              'assets/images/warehouse(2).png',
-                              width: 50,
-                              height: 50,
-                            ),
+                            const Icon(Icons.receipt, size: 50, color: Colors.white),
                             'Invoice\nManagement',
                             InvoiceManagementScreen(),
                           ),
                           menuButton(
                             context,
-                            Image.asset(
-                              'assets/images/warehouse(2).png',
-                              width: 50,
-                              height: 50,
-                            ),
+                            const Icon(Icons.apartment, size: 50, color: Colors.white),
                             'Inventory\nControl',
                             InventoryPage(),
                           ),
                           menuButton(
                             context,
-                            Image.asset(
-                              'assets/images/warehouse(2).png',
-                              width: 50,
-                              height: 50,
-                            ),
+                            const Icon(Icons.phone, size: 50, color: Colors.white),
                             'Customer Relationship\nManagement',
                             CrmManagementScreen(),
                           ),
@@ -213,7 +190,7 @@ class MyHomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              iconWidget, // Image.asset or Icon widget
+              iconWidget,
               const SizedBox(height: 10),
               Text(
                 label,

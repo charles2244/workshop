@@ -13,7 +13,6 @@ class SparePart {
     required this.imageUrl,
   });
 
-  // From JSON (for Supabase or API)
   factory SparePart.fromJson(Map<String, dynamic> json) {
     return SparePart(
       id: json['sp_id'] ?? 0,

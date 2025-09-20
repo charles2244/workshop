@@ -15,7 +15,6 @@ class Procurement {
     required this.managerId,
   });
 
-  // From JSON (for Supabase or API)
   factory Procurement.fromJson(Map<String, dynamic> json) {
     return Procurement(
       id: (json['procurement_id'] ?? 0) as int,
