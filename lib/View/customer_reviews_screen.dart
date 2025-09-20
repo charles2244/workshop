@@ -1,10 +1,9 @@
-// customer_reviews_screen.dart - Updated with Figma color scheme
+// customer_reviews_screen.dart - Updated with inventory color scheme
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../Controls/crm_service.dart';
 import '../Model/customer.dart';
 import '../Model/customer_review.dart';
-
 
 class CustomerReviewsScreen extends StatefulWidget {
   final Customer customer;
@@ -55,7 +54,7 @@ class _CustomerReviewsScreenState extends State<CustomerReviewsScreen> {
     if (_reviewController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please enter a review'),
+          content: const Text('Please enter a review'),
           backgroundColor: Colors.orange[400],
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -80,8 +79,8 @@ class _CustomerReviewsScreenState extends State<CustomerReviewsScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Review added successfully'),
-          backgroundColor: Color(0xFF2A9D8F),
+          content: const Text('Review added successfully'),
+          backgroundColor: Colors.blue,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
@@ -101,21 +100,38 @@ class _CustomerReviewsScreenState extends State<CustomerReviewsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF3B4C68), // Dark blue background from Figma
-      appBar: AppBar(
-        title: Text('Customer Reviews', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
-        backgroundColor: Color(0xFF3B4C68),
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
+      backgroundColor: const Color(0xFF2c3e50), // Updated to match inventory
       body: Column(
         children: [
+          const SizedBox(height: 30),
+          // Header with back button and title
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+              ),
+              Expanded(
+                child: Text(
+                  'Customer Reviews',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 48), // Balance the back button width
+            ],
+          ),
+
           // Customer Header
           Container(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Text(
               widget.customer.name,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
@@ -126,8 +142,8 @@ class _CustomerReviewsScreenState extends State<CustomerReviewsScreen> {
 
           // Add Review Section
           Container(
-            margin: EdgeInsets.all(16),
-            padding: EdgeInsets.all(20),
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
@@ -135,7 +151,7 @@ class _CustomerReviewsScreenState extends State<CustomerReviewsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Add Review',
                   style: TextStyle(
                     color: Colors.black,
@@ -143,7 +159,7 @@ class _CustomerReviewsScreenState extends State<CustomerReviewsScreen> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Star Rating
                 Row(
@@ -156,7 +172,7 @@ class _CustomerReviewsScreenState extends State<CustomerReviewsScreen> {
                         });
                       },
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
                         child: Icon(
                           Icons.star,
                           color: index < _selectedRating ? Colors.amber[400] : Colors.grey[300],
@@ -167,13 +183,13 @@ class _CustomerReviewsScreenState extends State<CustomerReviewsScreen> {
                   }),
                 ),
 
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Review Text Field
                 TextFormField(
                   controller: _reviewController,
                   maxLines: 3,
-                  style: TextStyle(color: Colors.black),
+                  style: const TextStyle(color: Colors.black),
                   decoration: InputDecoration(
                     hintText: 'Write your review...',
                     hintStyle: TextStyle(color: Colors.grey[500]),
@@ -189,13 +205,13 @@ class _CustomerReviewsScreenState extends State<CustomerReviewsScreen> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Color(0xFF2A9D8F), width: 2),
+                      borderSide: const BorderSide(color: Colors.blue, width: 2),
                     ),
-                    contentPadding: EdgeInsets.all(16),
+                    contentPadding: const EdgeInsets.all(16),
                   ),
                 ),
 
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 // Add Button
                 SizedBox(
@@ -203,14 +219,14 @@ class _CustomerReviewsScreenState extends State<CustomerReviewsScreen> {
                   child: ElevatedButton(
                     onPressed: _addReview,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF2A9D8F),
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Colors.blue,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       elevation: 0,
                     ),
-                    child: Text(
+                    child: const Text(
                       'Add Review',
                       style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
                     ),
@@ -220,54 +236,68 @@ class _CustomerReviewsScreenState extends State<CustomerReviewsScreen> {
             ),
           ),
 
+          const SizedBox(height: 16),
+
           // Reviews List
           Expanded(
             child: Container(
-              margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
+              margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Previous Reviews',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(height: 16),
-
-                  Expanded(
-                    child: _isLoading
-                        ? Center(child: CircularProgressIndicator(color: Color(0xFF2A9D8F)))
-                        : _reviews.isEmpty
-                        ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.rate_review_outlined, size: 48, color: Colors.grey[400]),
-                          SizedBox(height: 12),
-                          Text(
-                            'No reviews yet',
-                            style: TextStyle(color: Colors.grey[500], fontSize: 16),
-                          ),
-                        ],
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Previous Reviews',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
                       ),
-                    )
-                        : ListView.builder(
-                      itemCount: _reviews.length,
-                      itemBuilder: (context, index) {
-                        final review = _reviews[index];
-                        return _buildReviewItem(review);
-                      },
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+
+                    Expanded(
+                      child: _isLoading
+                          ? const Center(child: CircularProgressIndicator(color: Colors.blue))
+                          : _reviews.isEmpty
+                          ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.rate_review_outlined, size: 48, color: Colors.grey[400]),
+                            const SizedBox(height: 12),
+                            Text(
+                              'No reviews yet',
+                              style: TextStyle(color: Colors.grey[500], fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      )
+                          : Container(
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: _reviews.length,
+                          itemBuilder: (context, index) {
+                            final review = _reviews[index];
+                            return _buildReviewItem(review);
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -278,10 +308,10 @@ class _CustomerReviewsScreenState extends State<CustomerReviewsScreen> {
 
   Widget _buildReviewItem(CustomerReview review) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16),
-      padding: EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey[200]!),
       ),
@@ -312,12 +342,12 @@ class _CustomerReviewsScreenState extends State<CustomerReviewsScreen> {
             ],
           ),
 
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
 
           // Review Text
           Text(
             review.reviewText,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black87,
               fontSize: 14,
               height: 1.4,

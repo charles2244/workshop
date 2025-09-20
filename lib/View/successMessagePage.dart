@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import '../Controls/workload_controller.dart';
+import 'work_scheduller.dart';
 
 class ProcurementSuccessPage extends StatefulWidget {
   final String message;
+  final WorkloadController? controller;
 
   const ProcurementSuccessPage({
     Key? key,
     required this.message,
+    this.controller,
   }) : super(key: key);
 
   @override
@@ -34,7 +38,18 @@ class _ProcurementSuccessPageState extends State<ProcurementSuccessPage> {
           showMessage = true;
         });
         Future.delayed(const Duration(seconds: 2), () {
-          Navigator.pop(context);
+          if (widget.controller != null) {
+            // Navigate back to work scheduler
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => WorkSchedulerPage(controller: widget.controller!),
+              ),
+              (route) => false,
+            );
+          } else {
+            // Fallback to pop if no controller provided
+            Navigator.pop(context);
+          }
         });
       }
     });

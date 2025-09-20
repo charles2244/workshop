@@ -3,6 +3,7 @@ import '../Controls/workload_controller.dart';
 import '../Model/workload_model.dart';
 import 'work_scheduller.dart';
 import 'workload.dart';
+import 'successMessagePage.dart';
 
 class AssignJobPage extends StatelessWidget {
   final WorkloadController controller;
@@ -58,7 +59,6 @@ class AssignJobPage extends StatelessWidget {
             ),
           ),
 
-          // Main content container with a white background and rounded corners
           Positioned.fill(
             top: 100,
             child: Container(
@@ -225,25 +225,22 @@ class AssignJobPage extends StatelessWidget {
                               descriptionController.text,
                             );
                             await controller.updateWorkStatus(work.id, "waiting");
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: const Text("Job assigned successfully!"),
-                                behavior: SnackBarBehavior.floating,
-                                margin: const EdgeInsets.only(bottom: 100), // Adjust position
-                              ),
-                            );
-                            Navigator.of(context).pushAndRemoveUntil(
+                            
+                            // Navigate to success page
+                            Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => WorkSchedulerPage(controller: controller),
+                                builder: (context) => ProcurementSuccessPage(
+                                  message: "Job Assignment",
+                                  controller: controller,
+                                ),
                               ),
-                              (route) => false,
                             );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: const Text("Please fill all fields"),
                                 behavior: SnackBarBehavior.floating,
-                                margin: const EdgeInsets.only(bottom: 100), // Adjust position
+                                margin: const EdgeInsets.only(bottom: 100),
                               ),
                             );
                           }

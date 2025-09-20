@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../Model/invoice.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 
 class InvoiceAnalyticsScreen extends StatelessWidget {
@@ -12,44 +12,56 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF8F9FA),
-      appBar: AppBar(
-        title: Text(
-          'Financial Dashboard',
-          style: TextStyle(
-            color: Color(0xFF1A1D29),
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
+      backgroundColor: const Color(0xFF2c3e50),
+      body: Column(
+        children: [
+          const SizedBox(height: 30),
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+              ),
+              const SizedBox(width: 120),
+              const Text(
+                'Financial Dashboard',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Color(0xFF1A1D29)),
-          onPressed: () => Navigator.pop(context),
-        ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1),
-          child: Container(
-            height: 1,
-            color: Color(0xFFE5E7EB),
+
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(top: 20),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSummaryCards(),
+                    const SizedBox(height: 24),
+                    _buildRevenueChart(),
+                    const SizedBox(height: 24),
+                    _buildStatusChart(),
+                    const SizedBox(height: 24),
+                    _buildRecentActivity(),
+                  ],
+                ),
+              ),
+            ),
           ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildSummaryCards(),
-            SizedBox(height: 24),
-            _buildRevenueChart(),
-            SizedBox(height: 24),
-            _buildStatusChart(),
-            SizedBox(height: 24),
-            _buildRecentActivity(),
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -83,38 +95,38 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
               child: _buildSummaryCard(
                 'Invoice Created',
                 totalInvoices.toString(),
-                Color(0xFF3B82F6),
+                const Color(0xFF3B82F6),
                 Icons.receipt_long_outlined,
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: _buildSummaryCard(
                 'Total Paid',
                 paidInvoices.toString(),
-                Color(0xFF059669),
+                const Color(0xFF059669),
                 Icons.check_circle_outline,
               ),
             ),
           ],
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Row(
           children: [
             Expanded(
               child: _buildSummaryCard(
                 'Total Overdue',
                 overdueInvoices.toString(),
-                Color(0xFFDC2626),
+                const Color(0xFFDC2626),
                 Icons.warning_outlined,
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               child: _buildSummaryCard(
                 'Monthly Revenue',
-                formattedPaidRevenue, // Use the properly formatted string
-                Color(0xFF7C3AED),
+                formattedPaidRevenue,
+                const Color(0xFF7C3AED),
                 Icons.trending_up_outlined,
               ),
             ),
@@ -126,15 +138,15 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
 
   Widget _buildSummaryCard(String title, String value, Color color, IconData icon) {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF000000).withOpacity(0.05),
+            color: const Color(0xFF000000).withOpacity(0.05),
             blurRadius: 10,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -145,7 +157,7 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
@@ -155,19 +167,19 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
               // Removed the 3 dots icon
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             value,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0xFF1A1D29),
               fontSize: 24,
               fontWeight: FontWeight.w700,
             ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0xFF6B7280),
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -208,15 +220,15 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
     }
 
     return Container(
-      padding: EdgeInsets.all(24),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF000000).withOpacity(0.05),
+            color: const Color(0xFF000000).withOpacity(0.05),
             blurRadius: 10,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -226,7 +238,7 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
+              const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -248,12 +260,12 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
                 ],
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Color(0xFF059669).withOpacity(0.1),
+                  color: const Color(0xFF059669).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Text(
+                child: const Text(
                   '+12.5%',
                   style: TextStyle(
                     color: Color(0xFF059669),
@@ -264,8 +276,8 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 24),
-          Container(
+          const SizedBox(height: 24),
+          SizedBox(
             height: 200,
             child: LineChart(
               LineChartData(
@@ -274,13 +286,13 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
                   drawVerticalLine: false,
                   horizontalInterval: spots.isEmpty ? 1 : spots.map((e) => e.y).reduce((a, b) => a > b ? a : b) / 4,
                   getDrawingHorizontalLine: (value) {
-                    return FlLine(
+                    return const FlLine(
                       color: Color(0xFFE5E7EB),
                       strokeWidth: 1,
                     );
                   },
                 ),
-                titlesData: FlTitlesData(
+                titlesData: const FlTitlesData(
                   leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                   rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                   topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -291,14 +303,14 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
                   LineChartBarData(
                     spots: spots,
                     isCurved: true,
-                    color: Color(0xFF3B82F6),
+                    color: const Color(0xFF3B82F6),
                     barWidth: 3,
                     dotData: FlDotData(
                       show: true,
                       getDotPainter: (spot, percent, barData, index) {
                         return FlDotCirclePainter(
                           radius: 4,
-                          color: Color(0xFF3B82F6),
+                          color: const Color(0xFF3B82F6),
                           strokeWidth: 0,
                         );
                       },
@@ -307,8 +319,8 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
                       show: true,
                       gradient: LinearGradient(
                         colors: [
-                          Color(0xFF3B82F6).withOpacity(0.3),
-                          Color(0xFF3B82F6).withOpacity(0.05),
+                          const Color(0xFF3B82F6).withOpacity(0.3),
+                          const Color(0xFF3B82F6).withOpacity(0.05),
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -338,7 +350,7 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
 
     if (paidCount > 0) {
       sections.add(PieChartSectionData(
-        color: Color(0xFF059669),
+        color: const Color(0xFF059669),
         value: paidCount.toDouble(),
         title: '',
         radius: 40,
@@ -347,7 +359,7 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
 
     if (pendingCount > 0) {
       sections.add(PieChartSectionData(
-        color: Color(0xFFD97706),
+        color: const Color(0xFFD97706),
         value: pendingCount.toDouble(),
         title: '',
         radius: 40,
@@ -356,7 +368,7 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
 
     if (overdueCount > 0) {
       sections.add(PieChartSectionData(
-        color: Color(0xFFDC2626),
+        color: const Color(0xFFDC2626),
         value: overdueCount.toDouble(),
         title: '',
         radius: 40,
@@ -364,22 +376,22 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
     }
 
     return Container(
-      padding: EdgeInsets.all(24),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF000000).withOpacity(0.05),
+            color: const Color(0xFF000000).withOpacity(0.05),
             blurRadius: 10,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Invoice Status',
             style: TextStyle(
               color: Color(0xFF1A1D29),
@@ -387,12 +399,12 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           Row(
             children: [
               Expanded(
                 flex: 2,
-                child: Container(
+                child: SizedBox(
                   height: 200,
                   child: PieChart(
                     PieChartData(
@@ -403,21 +415,21 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: 24),
+              const SizedBox(width: 24),
               Expanded(
                 flex: 3,
                 child: Column(
                   children: [
                     if (paidCount > 0)
-                      _buildStatusLegend('Paid', paidCount, Color(0xFF059669), totalCount),
+                      _buildStatusLegend('Paid', paidCount, const Color(0xFF059669), totalCount),
                     if (paidCount > 0 && (pendingCount > 0 || overdueCount > 0))
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                     if (pendingCount > 0)
-                      _buildStatusLegend('Pending', pendingCount, Color(0xFFD97706), totalCount),
+                      _buildStatusLegend('Pending', pendingCount, const Color(0xFFD97706), totalCount),
                     if (pendingCount > 0 && overdueCount > 0)
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                     if (overdueCount > 0)
-                      _buildStatusLegend('Overdue', overdueCount, Color(0xFFDC2626), totalCount),
+                      _buildStatusLegend('Overdue', overdueCount, const Color(0xFFDC2626), totalCount),
                   ],
                 ),
               ),
@@ -441,14 +453,14 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
           ),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 label,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xFF1A1D29),
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -456,7 +468,7 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
               ),
               Text(
                 '$count invoices ($percentage%)',
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xFF6B7280),
                   fontSize: 14,
                 ),
@@ -472,22 +484,22 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
     final recentInvoices = invoices.take(3).toList();
 
     return Container(
-      padding: EdgeInsets.all(24),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF000000).withOpacity(0.05),
+            color: const Color(0xFF000000).withOpacity(0.05),
             blurRadius: 10,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
@@ -501,9 +513,9 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
               // Removed "View All" text
             ],
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           if (recentInvoices.isEmpty)
-            Center(
+            const Center(
               child: Text(
                 'No recent activity',
                 style: TextStyle(color: Color(0xFF9CA3AF)),
@@ -523,55 +535,55 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
 
     switch (invoice.status.toLowerCase()) {
       case 'paid':
-        statusColor = Color(0xFF059669);
-        statusBgColor = Color(0xFFD1FAE5);
+        statusColor = const Color(0xFF059669);
+        statusBgColor = const Color(0xFFD1FAE5);
         displayStatus = 'Paid';
         break;
       case 'overdue':
-        statusColor = Color(0xFFDC2626);
-        statusBgColor = Color(0xFFFEE2E2);
+        statusColor = const Color(0xFFDC2626);
+        statusBgColor = const Color(0xFFFEE2E2);
         displayStatus = 'Overdue';
         break;
       default:
-        statusColor = Color(0xFFD97706);
-        statusBgColor = Color(0xFFFEF3C7);
+        statusColor = const Color(0xFFD97706);
+        statusBgColor = const Color(0xFFFEF3C7);
         displayStatus = 'Pending';
     }
 
     return Padding(
-      padding: EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: 16),
       child: Row(
         children: [
           Container(
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: Color(0xFFEFF6FF),
+              color: const Color(0xFFEFF6FF),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.receipt_outlined,
               color: Color(0xFF3B82F6),
               size: 20,
             ),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   invoice.customerName,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFF1A1D29),
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 Text(
                   DateFormat('MMM dd, yyyy').format(invoice.createdAt),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFF6B7280),
                     fontSize: 14,
                   ),
@@ -584,15 +596,15 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
             children: [
               Text(
                 '\$${invoice.totalAmount.toStringAsFixed(2)}',
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xFF1A1D29),
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              SizedBox(height: 2),
+              const SizedBox(height: 2),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: statusBgColor,
                   borderRadius: BorderRadius.circular(10),
@@ -615,15 +627,15 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
 
   Widget _buildEmptyChart(String title, String message) {
     return Container(
-      padding: EdgeInsets.all(24),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF000000).withOpacity(0.05),
+            color: const Color(0xFF000000).withOpacity(0.05),
             blurRadius: 10,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -632,28 +644,28 @@ class InvoiceAnalyticsScreen extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0xFF1A1D29),
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: 20),
-          Container(
+          const SizedBox(height: 20),
+          SizedBox(
             height: 200,
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.bar_chart_outlined,
                     color: Color(0xFF9CA3AF),
                     size: 48,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text(
                     message,
-                    style: TextStyle(color: Color(0xFF9CA3AF)),
+                    style: const TextStyle(color: Color(0xFF9CA3AF)),
                   ),
                 ],
               ),

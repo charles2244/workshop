@@ -76,7 +76,6 @@ Color _getStatusColor(String status) {
       backgroundColor: const Color(0xFF2C3E50),
       body: Stack(
         children: [
-          // 🔹 Header
           Positioned(
             top: 0,
             left: 0,
@@ -141,7 +140,6 @@ Color _getStatusColor(String status) {
                   ),
                   const SizedBox(height: 20),
 
-                  // 🔹 Jobs List (scrollable)
                   Expanded(
                     child: FutureBuilder<List<WorkloadModel>>(
                       future: _works,
@@ -156,67 +154,10 @@ Color _getStatusColor(String status) {
 
                         final works = snapshot.data!;
 
-                        // 🔹 Sort jobs by time
                         works.sort((a, b) {
                           if (a.time == null || b.time == null) return 0;
                           return a.time!.compareTo(b.time!);
                         });
-
-                        // 🔹 Override DB status with "In Progress" if within 2 hours, or "Completed" if past 2 hours
-                        DateTime now = DateTime.now();
-                        for (var work in works) {
-                          if (work.time != null) {
-                            try {
-                              final parts = work.time!.split(":");
-                              final int hour = int.parse(parts[0]);
-                              final int minute = int.parse(parts[1]);
-
-                              DateTime start = DateTime(
-                                _selectedDay!.year,
-                                _selectedDay!.month,
-                                _selectedDay!.day,
-                                hour,
-                                minute,
-                              );
-
-                              DateTime end = start.add(const Duration(hours: 2));
-
-                              if (now.isAfter(start) && now.isBefore(end)) {
-                                final updatedWork = WorkloadModel(
-                                  id: work.id,
-                                  mechanicName: work.mechanicName,
-                                  jobsCompleted: work.jobsCompleted,
-                                  totalJobs: work.totalJobs,
-                                  status: "In Progress",
-                                  vehicleId: work.vehicleId,
-                                  vehicleMake: work.vehicleMake,
-                                  vehicleModel: work.vehicleModel,
-                                  customerName: work.customerName,
-                                  date: work.date,
-                                  time: work.time,
-                                );
-                                work = updatedWork;
-                              } else if (now.isAfter(end)) {
-                                final updatedWork = WorkloadModel(
-                                  id: work.id,
-                                  mechanicName: work.mechanicName,
-                                  jobsCompleted: work.jobsCompleted,
-                                  totalJobs: work.totalJobs,
-                                  status: "completed",
-                                  vehicleId: work.vehicleId,
-                                  vehicleMake: work.vehicleMake,
-                                  vehicleModel: work.vehicleModel,
-                                  customerName: work.customerName,
-                                  date: work.date,
-                                  time: work.time,
-                                );
-                                work = updatedWork;
-                              }
-                            } catch (e) {
-                              debugPrint("Time parse error: ${work.time}");
-                            }
-                          }
-                        }
 
                         return ListView.builder(
                           padding: const EdgeInsets.symmetric(horizontal: 16),

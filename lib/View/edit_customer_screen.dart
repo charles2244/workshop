@@ -1,7 +1,9 @@
-// edit_customer_screen.dart - Updated with Figma color scheme
+// edit_customer_screen.dart - Updated with inventory color scheme
 import 'package:flutter/material.dart';
+
 import '../Controls/crm_service.dart';
 import '../Model/customer.dart';
+
 
 class EditCustomerScreen extends StatefulWidget {
   final Customer customer;
@@ -43,126 +45,146 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF3B4C68),
-      appBar: AppBar(
-        title: Text('Edit Customer', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
-        backgroundColor: Color(0xFF3B4C68),
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.white),
-        actions: [
-          Container(
-            margin: EdgeInsets.only(right: 8),
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.red,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              'DEL',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      backgroundColor: const Color(0xFF2c3e50), // Updated to match inventory
+      body: Column(
+        children: [
+          const SizedBox(height: 30),
+          // Header with back button and title
+          Row(
             children: [
-              // Back link
-              Text(
-                'Back',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
+              IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
               ),
-
-              SizedBox(height: 16),
-
-              // Customer Information Title
-              Text(
-                'Customer Information',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-
-              SizedBox(height: 24),
-
-              // Customer Name Field with label
-              Text(
-                'Customer Name',
-                style: TextStyle(color: Colors.white, fontSize: 14),
-              ),
-              SizedBox(height: 8),
-              _buildTextField(_nameController, 'Customer Name', Icons.person),
-
-              SizedBox(height: 16),
-
-              // Phone Number Field with label
-              Text(
-                'Phone Number',
-                style: TextStyle(color: Colors.white, fontSize: 14),
-              ),
-              SizedBox(height: 8),
-              _buildTextField(_phoneController, 'Phone Number', Icons.phone, keyboardType: TextInputType.phone),
-
-              SizedBox(height: 16),
-
-              // Email Field with label
-              Text(
-                'Email',
-                style: TextStyle(color: Colors.white, fontSize: 14),
-              ),
-              SizedBox(height: 8),
-              _buildTextField(_emailController, 'Email', Icons.email, keyboardType: TextInputType.emailAddress),
-
-              SizedBox(height: 16),
-
-              // Address Field with label
-              Text(
-                'Address',
-                style: TextStyle(color: Colors.white, fontSize: 14),
-              ),
-              SizedBox(height: 8),
-              _buildTextField(_addressController, 'Address', Icons.location_on, maxLines: 2),
-
-              SizedBox(height: 32),
-
-              // Update Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _updateCustomer,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF2A9D8F),
-                    disabledBackgroundColor: Color(0xFF2A9D8F).withOpacity(0.6),
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    elevation: 0,
+              Expanded(
+                child: Text(
+                  'Edit Customer',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                  child: _isLoading
-                      ? CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
-                      : Text(
-                    'Update Customer',
-                    style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(right: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: const Text(
+                  'DEL',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ],
           ),
-        ),
+
+          // Main Form Container
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(top: 20),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Customer Information Title
+                      const Text(
+                        'Customer Information',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Customer Name Field with label
+                      const Text(
+                        'Customer Name',
+                        style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 8),
+                      _buildTextField(_nameController, 'Customer Name', Icons.person),
+
+                      const SizedBox(height: 16),
+
+                      // Phone Number Field with label
+                      const Text(
+                        'Phone Number',
+                        style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 8),
+                      _buildTextField(_phoneController, 'Phone Number', Icons.phone, keyboardType: TextInputType.phone),
+
+                      const SizedBox(height: 16),
+
+                      // Email Field with label
+                      const Text(
+                        'Email',
+                        style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 8),
+                      _buildTextField(_emailController, 'Email', Icons.email, keyboardType: TextInputType.emailAddress),
+
+                      const SizedBox(height: 16),
+
+                      // Address Field with label
+                      const Text(
+                        'Address',
+                        style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 8),
+                      _buildTextField(_addressController, 'Address', Icons.location_on, maxLines: 2),
+
+                      const SizedBox(height: 32),
+
+                      // Update Button
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _isLoading ? null : _updateCustomer,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue, // Updated to match inventory theme
+                            disabledBackgroundColor: Colors.blue.withOpacity(0.6),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: _isLoading
+                              ? const CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
+                              : const Text(
+                            'Update Customer',
+                            style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -178,24 +200,24 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
       controller: controller,
       maxLines: maxLines,
       keyboardType: keyboardType,
-      style: TextStyle(color: Colors.black, fontSize: 16),
+      style: const TextStyle(color: Colors.black, fontSize: 16),
       decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: Colors.grey[500], size: 20),
-        fillColor: Colors.white,
+        prefixIcon: Icon(icon, color: Colors.grey[600], size: 20),
+        fillColor: Colors.grey[50],
         filled: true,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Color(0xFF2A9D8F), width: 2),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.blue, width: 2),
         ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
       validator: (value) {
         if (controller == _nameController || controller == _phoneController) {
@@ -238,8 +260,8 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Customer updated successfully!'),
-            backgroundColor: Color(0xFF2A9D8F),
+            content: const Text('Customer updated successfully!'),
+            backgroundColor: Colors.blue,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),

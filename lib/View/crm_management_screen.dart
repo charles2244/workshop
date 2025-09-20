@@ -1,7 +1,7 @@
-// crm_management_screen.dart - Updated with Figma color scheme
+// crm_management_screen.dart - Updated with inventory color scheme
 import 'package:flutter/material.dart';
-import '../Model/customer.dart';
 import '../Controls/crm_service.dart';
+import '../Model/customer.dart';
 import 'create_customer_screen.dart';
 import 'customer_details_screen.dart';
 
@@ -71,22 +71,38 @@ class _CrmManagementScreenState extends State<CrmManagementScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF3B4C68), // Dark blue background from Figma
-      appBar: AppBar(
-        title: Text('Customer', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
-        backgroundColor: Color(0xFF3B4C68),
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.white),
-        // Removed the actions section with the person icon
-      ),
+      backgroundColor: const Color(0xFF2c3e50), // Updated to match inventory
       body: Column(
         children: [
+          const SizedBox(height: 30),
+          // Header with back button and title
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+              ),
+              Expanded(
+                child: Text(
+                  'Customer',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 48), // Balance the back button width
+            ],
+          ),
+
           // Search Bar
           Container(
-            padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             child: TextField(
               controller: _searchController,
-              style: TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.black),
               decoration: InputDecoration(
                 hintText: 'Search',
                 hintStyle: TextStyle(color: Colors.grey[500], fontSize: 16),
@@ -102,55 +118,62 @@ class _CrmManagementScreenState extends State<CrmManagementScreen> {
                 fillColor: Colors.white,
                 filled: true,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
+                  borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               ),
             ),
           ),
 
-          // Filter Tabs - Only showing Recent
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                _buildFilterTab('Recent'),
-              ],
-            ),
-          ),
-
-          SizedBox(height: 16),
-
-          // Customer List
+          // Main Content with rounded corners
           Expanded(
             child: Container(
-              margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: _isLoading
-                  ? Center(child: CircularProgressIndicator(color: Color(0xFF2A9D8F)))
-                  : _displayedCustomers.isEmpty
-                  ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.people_outline, size: 64, color: Colors.grey[400]),
-                    SizedBox(height: 16),
-                    Text('No customers found',
-                        style: TextStyle(color: Colors.grey[500], fontSize: 18)),
-                  ],
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
-              )
-                  : ListView.builder(
-                itemCount: _displayedCustomers.length,
-                itemBuilder: (context, index) {
-                  final customer = _displayedCustomers[index];
-                  return _buildCustomerCard(customer);
-                },
+              ),
+              child: Column(
+                children: [
+                  // Filter section
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    child: Row(
+                      children: [
+                        _buildFilterTab('Recent'),
+                      ],
+                    ),
+                  ),
+
+                  // Customer List
+                  Expanded(
+                    child: _isLoading
+                        ? const Center(child: CircularProgressIndicator(color: Colors.blue))
+                        : _displayedCustomers.isEmpty
+                        ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.people_outline, size: 64, color: Colors.grey[400]),
+                          const SizedBox(height: 16),
+                          Text('No customers found',
+                              style: TextStyle(color: Colors.grey[500], fontSize: 18)),
+                        ],
+                      ),
+                    )
+                        : ListView.builder(
+                      padding: const EdgeInsets.all(0),
+                      itemCount: _displayedCustomers.length,
+                      itemBuilder: (context, index) {
+                        final customer = _displayedCustomers[index];
+                        return _buildCustomerCard(customer);
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -166,8 +189,8 @@ class _CrmManagementScreenState extends State<CrmManagementScreen> {
             _loadCustomers();
           }
         },
-        backgroundColor: Color(0xFF2A9D8F), // Teal accent color
-        child: Icon(Icons.add, color: Colors.white),
+        backgroundColor: Colors.blue,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
@@ -181,16 +204,16 @@ class _CrmManagementScreenState extends State<CrmManagementScreen> {
         });
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white.withOpacity(0.2) : Colors.white.withOpacity(0.1),
+          color: isSelected ? Colors.blue.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
           borderRadius: BorderRadius.circular(20),
-          border: isSelected ? Border.all(color: Colors.white.withOpacity(0.3)) : null,
+          border: isSelected ? Border.all(color: Colors.blue) : null,
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: Colors.white,
+            color: isSelected ? Colors.blue : Colors.grey[600],
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
             fontSize: 14,
           ),
@@ -200,75 +223,67 @@ class _CrmManagementScreenState extends State<CrmManagementScreen> {
   }
 
   Widget _buildCustomerCard(Customer customer) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 16),
-      child: InkWell(
-        onTap: () async {
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CustomerDetailsScreen(customer: customer),
-            ),
-          );
-          if (result == true) {
-            _loadCustomers();
-          }
-        },
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: EdgeInsets.all(4),
-          child: Row(
-            children: [
-              // Avatar
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(Icons.person, color: Colors.grey[500], size: 24),
-              ),
-              SizedBox(width: 16),
-              // Customer Info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      customer.name,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      customer.phoneNumber,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    if (customer.address.isNotEmpty)
-                      Padding(
-                        padding: EdgeInsets.only(top: 2),
-                        child: Text(
-                          customer.address,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey[500],
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ],
+    return GestureDetector(
+      onTap: () async {
+        final result = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CustomerDetailsScreen(customer: customer),
           ),
+        );
+        if (result == true) {
+          _loadCustomers();
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          children: [
+            // Avatar
+            CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.blue.shade100,
+              child: const Icon(Icons.person, color: Colors.blue, size: 24),
+            ),
+            const SizedBox(width: 12),
+            // Customer Info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    customer.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    customer.phoneNumber,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  if (customer.address.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Text(
+                        customer.address,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.black,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

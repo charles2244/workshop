@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../Controls/workload_controller.dart';
 import '../Model/workload_model.dart';
 import 'work_scheduller.dart';
+import 'successMessagePage.dart';
 
 class EditJobPage extends StatelessWidget {
   final WorkloadController controller;
@@ -206,18 +207,15 @@ class EditJobPage extends StatelessWidget {
                                 selectedMechanic!, // Ensure non-null mechanic ID
                                 descriptionController.text,
                               );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: const Text("Job edited successfully!"),
-                                  behavior: SnackBarBehavior.floating,
-                                  margin: const EdgeInsets.only(bottom: 100),
-                                ),
-                              );
-                              Navigator.of(context).pushAndRemoveUntil(
+                              
+                              // Navigate to success page
+                              Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => WorkSchedulerPage(controller: controller),
+                                  builder: (context) => ProcurementSuccessPage(
+                                    message: "Job Edit",
+                                    controller: controller,
+                                  ),
                                 ),
-                                (route) => false,
                               );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
