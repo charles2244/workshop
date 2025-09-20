@@ -16,7 +16,7 @@ void main() {
     final controller = WorkloadController('test_url', 'test_anon_key');
 
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp(controller: controller, workloadController: controller,));
+    await tester.pumpWidget(MyApp());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
@@ -37,7 +37,7 @@ void main() {
 
     // Build the widget tree and trigger a frame
     var workloadController;
-    await tester.pumpWidget(MyApp(controller: workloadController, workloadController: controller,));
+    await tester.pumpWidget(MyApp());
 
     // Verify the widget tree
     expect(find.text('My App'), findsOneWidget);

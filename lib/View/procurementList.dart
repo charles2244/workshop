@@ -108,18 +108,38 @@ class _ProcurementPageState extends State<ProcurementPage> {
           // Procurement Request Count
           Container(
             margin: const EdgeInsets.symmetric(vertical: 16),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 8),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Text(
-              textAlign: TextAlign.center,
-              "Procurement Request \n ${procurementList.length}",
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+            child: RichText( // <--- USE RichText
+              textAlign: TextAlign.center, // textAlign can be applied to RichText
+              text: TextSpan(
+                // Default style for any text that doesn't have its own specific style
+                // This style will apply to the newline character '\n' if not handled otherwise
+                style: const TextStyle(
+                  color: Colors.black, // Default color if not overridden
+                  height: 1.8,
+                ),
+                children: <TextSpan>[
+                  const TextSpan(
+                    text: "Procurement Request\n", // Add newline here
+                    style: TextStyle(
+                      color: Colors.black,       // Color for "Procurement Request"
+                      fontSize: 15,
+                      fontWeight: FontWeight.normal, // Normal weight
+                    ),
+                  ),
+                  TextSpan(
+                    text: procurementList.length.toString(), // The count
+                    style: const TextStyle(
+                      color: Colors.blue,        // Blue color for the count
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,   // Bold weight for the count
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -139,7 +159,7 @@ class _ProcurementPageState extends State<ProcurementPage> {
                 children: [
                   Expanded( // Make the ListView take available space
                     child: Padding( // Added padding around the list/loader
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 0),
                       child: isLoading
                           ? const Center(child: CircularProgressIndicator())
                           : procurementList.isEmpty && !isLoading // Handle empty list case

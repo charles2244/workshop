@@ -263,10 +263,10 @@ class _InventoryPageState extends State<InventoryPage> {
           ),
           child: Column(
             children: [
-              Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+              Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
               const SizedBox(height: 8),
               Text(value,
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue)),
+                  style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.blue)),
             ],
           ),
         ),
