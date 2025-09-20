@@ -115,7 +115,7 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
 
                     _buildLabel("Remarks"),
                     _buildRemarksField(),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 60),
 
                     Center(
                       child: ElevatedButton(
@@ -337,32 +337,24 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
   }
 
   Widget _buildDatePicker(BuildContext context) {
-    return InkWell(
-      onTap: () async {
-        DateTime? picked = await showDatePicker(
-          context: context,
-          initialDate: selectedDate,
-          firstDate: DateTime(2020),
-          lastDate: DateTime(2030),
-        );
-        if (picked != null) setState(() => selectedDate = picked);
-      },
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade400),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          "${selectedDate.toLocal()}".split(' ')[0],
-          style: const TextStyle(fontSize: 16),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade400),
+        borderRadius: BorderRadius.circular(8),
+        color: Colors.grey.shade200,
+      ),
+      child: Text(
+        "${selectedDate.toLocal()}".split(' ')[0],
+        style: const TextStyle(
+          fontSize: 16,
+          color: Colors.black54,
         ),
       ),
     );
   }
 
-  /// Remarks TextField
   Widget _buildRemarksField() {
     return TextField(
       controller: remarksController,
@@ -386,6 +378,7 @@ class _ProcurementRequestPageState extends State<ProcurementRequestPage> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: const Text(
             "Submit Request",
+            textAlign: TextAlign.center,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           content: Column(

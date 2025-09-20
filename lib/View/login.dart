@@ -12,19 +12,19 @@ class FingerprintLoginScreen extends StatefulWidget {
 
 class _FingerprintLoginScreenState extends State<FingerprintLoginScreen> {
   final LocalAuthentication localAuth = LocalAuthentication();
-  bool _loading = true;
-  bool _authenticated = false;
+  bool _isLoading = true;
+  bool _isAuthenticated = false;
 
   @override
   void initState() {
     super.initState();
-    _authenticate();
+    _fingerAuthenticate();
   }
 
-  Future<void> _authenticate() async {
+  Future<void> _fingerAuthenticate() async {
     try {
       final didAuthenticate = await localAuth.authenticate(
-        localizedReason: 'Please scan your fingerprint to continue',
+        localizedReason: 'Please scan your fingerprint to proceed',
         options: const AuthenticationOptions(biometricOnly: true, stickyAuth: true),
       );
 
@@ -32,33 +32,33 @@ class _FingerprintLoginScreenState extends State<FingerprintLoginScreen> {
         final prefs = await SharedPreferences.getInstance();
         int? userId = prefs.getInt('user_id');
         if (userId == null) {
-          userId = 5001; // generate or assign user ID here
+          userId = 5001;
           await prefs.setInt('user_id', userId);
           await UserController().insertManager(id: userId);
         }
         print('Existing user ID: $userId');
         setState(() {
-          _authenticated = true;
+          _isAuthenticated = true;
         });
       }
     } catch (e) {
       print('Authentication error: $e');
     } finally {
       setState(() {
-        _loading = false;
+        _isLoading = false;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) {
+    if (_isLoading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
-    if (_authenticated) {
+    if (_isAuthenticated) {
       return MyApp();
     }
 
