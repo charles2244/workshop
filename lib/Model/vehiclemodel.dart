@@ -3,6 +3,7 @@ class VehicleModel {
   final String make;
   final String model;
   final String plate;
+  final String? vin;
   final int customerId;
 
   VehicleModel({
@@ -10,6 +11,7 @@ class VehicleModel {
     required this.make,
     required this.model,
     required this.plate,
+    this.vin,
     required this.customerId,
   });
 
@@ -19,6 +21,7 @@ class VehicleModel {
       make: (json['make'] ?? '').toString(),
       model: (json['model'] ?? '').toString(),
       plate: (json['plate'] ?? json['license_plate'] ?? '').toString(),
+      vin: json['vin']?.toString(),
       customerId: (json['customer_id'] ?? 0) as int,
     );
   }

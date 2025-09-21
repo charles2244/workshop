@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import '../Controls/vehicle_controller.dart';
 import '../Model/vehiclemodel.dart';
+import 'vehicledetails.dart';
 
-class CustomersPage extends StatefulWidget {
-  const CustomersPage({super.key});
+class VehiclesPage extends StatefulWidget {
+  const VehiclesPage({super.key});
 
   @override
-  State<CustomersPage> createState() => _CustomersPageState();
+  State<VehiclesPage> createState() => _CustomersPageState();
 }
 
-class _CustomersPageState extends State<CustomersPage> {
+class _CustomersPageState extends State<VehiclesPage> {
   final CrmController _controller = CrmController();
   final TextEditingController _searchCtrl = TextEditingController();
 
@@ -48,7 +49,7 @@ class _CustomersPageState extends State<CustomersPage> {
               ),
               const Spacer(),
               const Text(
-                'Customer',
+                'Vehicles',
                 style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const Spacer(),
@@ -115,27 +116,44 @@ class _CustomersPageState extends State<CustomersPage> {
                     separatorBuilder: (_, __) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final item = items[index];
-                      return Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(item.customer.name, style: const TextStyle(fontWeight: FontWeight.w600)),
-                                  const SizedBox(height: 4),
-                                  Text(item.customer.phone),
-                                  const SizedBox(height: 2),
-                                  Text('${item.vehicle.make} ${item.vehicle.model} ${item.vehicle.plate}'),
-                                ],
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CustomerDetailsScreen(
+                                customerVehicle: item,
                               ),
                             ),
-                          ],
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(item.customer.name, style: const TextStyle(fontWeight: FontWeight.w600)),
+                                    const SizedBox(height: 4),
+                                    Text(item.customer.phone),
+                                    const SizedBox(height: 2),
+                                    Text('${item.vehicle.make} ${item.vehicle.model} ${item.vehicle.plate}'),
+                                  ],
+                                ),
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                size: 16,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },

@@ -20,6 +20,8 @@ class _MonitorWorkloadPageState extends State<MonitorWorkloadPage> {
   DateTime _selectedDate = DateTime.now();
   late Future<List<WorkloadModel>> _workloads;
   int _selectedIndex = 4;
+  String _currentFilter = 'All'; // Default filter
+  List<WorkloadModel> _filteredWorkloads = [];
 
   @override
   void initState() {
@@ -31,6 +33,106 @@ class _MonitorWorkloadPageState extends State<MonitorWorkloadPage> {
     setState(() {
       _workloads = widget.controller.fetchWorkloadsForDate(_selectedDate);
     });
+  }
+
+  void _applyFilter(String filter) {
+    setState(() {
+      _currentFilter = filter;
+    });
+  }
+
+  List<WorkloadModel> _getFilteredWorkloads(List<WorkloadModel> workloads) {
+    List<WorkloadModel> filtered = List.from(workloads);
+    
+    switch (_currentFilter) {
+      case 'Most Available':
+        filtered.sort((a, b) {
+          int aJobs = a.jobsCompleted ?? 0;
+          int bJobs = b.jobsCompleted ?? 0;
+          return aJobs.compareTo(bJobs); // Sort by least jobs (most available)
+        });
+        break;
+      case 'Least Available':
+        filtered.sort((a, b) {
+          int aJobs = a.jobsCompleted ?? 0;
+          int bJobs = b.jobsCompleted ?? 0;
+          return bJobs.compareTo(aJobs); // Sort by most jobs (least available)
+        });
+        break;
+      case 'Alphabetical':
+        filtered.sort((a, b) {
+          String aName = a.mechanicName ?? "Unknown";
+          String bName = b.mechanicName ?? "Unknown";
+          return aName.compareTo(bName);
+        });
+        break;
+      case 'Full Workload':
+        filtered = filtered.where((workload) {
+          int jobsCompleted = workload.jobsCompleted ?? 0;
+          return jobsCompleted >= 5; // Full workload
+        }).toList();
+        break;
+      case 'Available':
+        filtered = filtered.where((workload) {
+          int jobsCompleted = workload.jobsCompleted ?? 0;
+          return jobsCompleted < 5; // Available
+        }).toList();
+        break;
+      case 'All':
+      default:
+        // No filtering, keep original order
+        break;
+    }
+    
+    return filtered;
+  }
+
+  void _showFilterBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Filter & Sort Workload',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF2C3E50),
+              ),
+            ),
+            const SizedBox(height: 20),
+            ...['All', 'Most Available', 'Least Available', 'Alphabetical', 'Full Workload', 'Available']
+                .map((filter) => ListTile(
+                      title: Text(filter),
+                      trailing: _currentFilter == filter
+                          ? const Icon(Icons.check, color: Color(0xFF2C3E50))
+                          : null,
+                      onTap: () {
+                        _applyFilter(filter);
+                        Navigator.pop(context);
+                      },
+                    ))
+                .toList(),
+          ],
+        ),
+      ),
+    );
   }
   void _onItemTapped(int index) {
     setState(() {
@@ -114,38 +216,67 @@ class _MonitorWorkloadPageState extends State<MonitorWorkloadPage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: GestureDetector(
-                      onTap: () async {
-                        DateTime? selectedDate = await showDatePicker(
-                          context: context,
-                          initialDate: _selectedDate,
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
-                        );
-                        if (selectedDate != null) {
-                          setState(() {
-                            _selectedDate = selectedDate;
-                          });
-                          _loadWorkloads();
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '${_selectedDate.toLocal()}'.split(' ')[0],
-                              style: const TextStyle(fontWeight: FontWeight.bold),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () async {
+                              DateTime? selectedDate = await showDatePicker(
+                                context: context,
+                                initialDate: _selectedDate,
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2100),
+                              );
+                              if (selectedDate != null) {
+                                setState(() {
+                                  _selectedDate = selectedDate;
+                                });
+                                _loadWorkloads();
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '${_selectedDate.toLocal()}'.split(' ')[0],
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  const Icon(Icons.calendar_month, color: Color(0xFF2C3E50)),
+                                ],
+                              ),
                             ),
-                            const Icon(Icons.calendar_month, color: Color(0xFF2C3E50)),
-                          ],
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 12),
+                        GestureDetector(
+                          onTap: _showFilterBottomSheet,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(10),
+                              color: _currentFilter != 'All' ? const Color(0xFF2C3E50).withOpacity(0.1) : Colors.white,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.filter_list, color: Color(0xFF2C3E50)),
+                                const SizedBox(width: 8),
+                                Text(
+                                  _currentFilter,
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Expanded(
@@ -161,15 +292,48 @@ class _MonitorWorkloadPageState extends State<MonitorWorkloadPage> {
                         }
 
                         final workloads = snapshot.data!;
-                    return DataTable(
-                      headingRowColor: WidgetStateProperty.all(Color(0xFF2C3E50)),
-                      columns: const [
-                        DataColumn(label: Text('Name', style: TextStyle(color: Colors.white))),
-                        DataColumn(label: Text('Jobs', style: TextStyle(color: Colors.white))),
-                        DataColumn(label: Text('Status', style: TextStyle(color: Colors.white))),
-                        DataColumn(label: Text('Details' , style: TextStyle(color: Colors.white))),
-                      ],
-                      rows: workloads.map((workload) {
+                        final filteredWorkloads = _getFilteredWorkloads(workloads);
+                        
+                        if (filteredWorkloads.isEmpty) {
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.search_off,
+                                  size: 64,
+                                  color: Colors.grey,
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'No workloads found with current filter',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Try changing the filter or date',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        
+                        return DataTable(
+                          headingRowColor: WidgetStateProperty.all(Color(0xFF2C3E50)),
+                          columns: const [
+                            DataColumn(label: Text('Name', style: TextStyle(color: Colors.white))),
+                            DataColumn(label: Text('Jobs', style: TextStyle(color: Colors.white))),
+                            DataColumn(label: Text('Status', style: TextStyle(color: Colors.white))),
+                            DataColumn(label: Text('Details' , style: TextStyle(color: Colors.white))),
+                          ],
+                          rows: filteredWorkloads.map((workload) {
                         int jobsCompleted = workload.jobsCompleted ?? 0;
                         int totalJobs = 5;
 

@@ -25,7 +25,6 @@ class CrmController {
       for (final row in customersRaw) {
         final map = Map<String, dynamic>.from(row as Map);
         final c = CustomerModel.fromJson(map);
-        // Only keep customers we actually need
         if (customerIds.contains(c.id)) {
           customersById[c.id] = c;
         }

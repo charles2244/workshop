@@ -4,7 +4,7 @@ import 'package:workshop_manager/View/work_scheduller.dart';
 import 'package:workshop_manager/View/workload.dart';
 import 'crm_management_screen.dart';
 import 'invoice_management_screen.dart';
-import 'vehicle.dart';
+import 'vehiclemanagement.dart';
 import 'inventory.dart';
 import '../Controls/workload_controller.dart';
 import 'login.dart';
@@ -119,7 +119,7 @@ class MyHomePage extends StatelessWidget {
                             context,
                             const Icon(Icons.directions_car, size: 50, color: Colors.white),
                             'Vehicle\nManagement',
-                            CustomersPage(),
+                            VehiclesPage(),
                           ),
                           menuButton(
                             context,

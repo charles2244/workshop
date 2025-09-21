@@ -4,6 +4,7 @@ import '../Model/customer.dart';
 import '../Model/work.dart';
 import '../Model/call_log.dart';
 import '../Model/customer_review.dart';
+import '../Model/service_history_model.dart';
 
 class CrmService {
   final SupabaseClient _client = Supabase.instance.client;
@@ -275,6 +276,79 @@ class CrmService {
       return response;
     } catch (e) {
       throw Exception('Failed to fetch customer with vehicle info: $e');
+    }
+  }
+
+  // Get service history for a customer
+  Future<List<ServiceHistory>> getCustomerServiceHistory(String customerId) async {
+    try {
+      print('Fetching service history for customer ID: $customerId');
+
+      // First get customer vehicles
+      final vehicles = await getCustomerVehicles(customerId);
+
+      if (vehicles.isEmpty) {
+        print('No vehicles found for customer, cannot fetch service history');
+        return [];
+      }
+
+      List<ServiceHistory> allServiceHistory = [];
+
+      // Get service history for each vehicle
+      for (final vehicle in vehicles) {
+        final vehicleId = vehicle['id']?.toString();
+        if (vehicleId != null) {
+          try {
+            // Join Works with Mechanics to get mechanic names
+            final response = await _client
+                .from('Works')
+                .select('''
+                  id,
+                  date,
+                  descriptions,
+                  mechanic_id,
+                  vehicle_id,
+                  Mechanics!inner(Name)
+                ''')
+                .eq('vehicle_id', vehicleId)
+                .order('date', ascending: false);
+
+            if (response != null) {
+              final serviceHistory = (response as List<dynamic>)
+                  .map((json) {
+                    final workData = json as Map<String, dynamic>;
+                    final mechanicData = workData['Mechanics'] as Map<String, dynamic>?;
+                    
+                    return ServiceHistory(
+                      id: workData['id']?.toString() ?? '',
+                      date: workData['date'] != null
+                          ? DateTime.parse(workData['date'].toString())
+                          : DateTime.now(),
+                      description: workData['descriptions']?.toString() ?? '',
+                      mechanicName: mechanicData?['Name']?.toString() ?? 'Unknown',
+                      vehicleId: vehicleId,
+                      customerId: customerId,
+                    );
+                  })
+                  .toList();
+              allServiceHistory.addAll(serviceHistory);
+            }
+          } catch (e) {
+            print('Error fetching service history for vehicle $vehicleId: $e');
+            // Continue with other vehicles even if one fails
+          }
+        }
+      }
+
+      // Sort all service history by date (newest first)
+      allServiceHistory.sort((a, b) => b.date.compareTo(a.date));
+
+      print('Found ${allServiceHistory.length} service history records for customer');
+      return allServiceHistory;
+
+    } catch (e) {
+      print('Error fetching customer service history: $e');
+      throw Exception('Failed to load customer service history: $e');
     }
   }
 }
