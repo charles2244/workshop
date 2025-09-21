@@ -7,7 +7,6 @@ class WorkloadController {
   WorkloadController(String supabaseUrl, String supabaseAnonKey)
       : _client = SupabaseClient(supabaseUrl, supabaseAnonKey);
 
-  // 🔹 Fetch workloads summary for MonitorWorkloadPage
   Future<List<WorkloadModel>> fetchWorkloadsForDate(DateTime date) async {
     final formattedDate =
         "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
@@ -37,7 +36,6 @@ class WorkloadController {
     }).toList();
   }
 
-  // 🔹 Fetch full works with vehicle + customer for WorkSchedulerPage
   Future<List<WorkloadModel>> fetchWorksForDateWithDetails(DateTime date) async {
     final formattedDate =
         "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
@@ -75,7 +73,7 @@ class WorkloadController {
         vehicleId: vehicle['id'],
         vehicleMake: vehicle['make'],
         vehicleModel: vehicle['model'],
-        vehicleVIN: vehicle['vin'], // Include VIN field
+        vehicleVIN: vehicle['vin'],
         customerName: customer['name'],
         date: work['date'],
         time: work['time'],
@@ -85,13 +83,11 @@ class WorkloadController {
     }).toList();
   }
 
-  // Fetch mechanics as a list of maps
   Future<List<Map<String, dynamic>>> fetchMechanics() async {
     final mechanics = await _client.from('Mechanics').select();
     return List<Map<String, dynamic>>.from(mechanics);
   }
 
-  // Update work details
   Future<void> updateWorkDetails(int workId, int mechanicId, String description) async {
     await _client.from('Works').update({
       'mechanic_id': mechanicId,
@@ -99,14 +95,12 @@ class WorkloadController {
     }).eq('id', workId);
   }
 
-  // Update work status
   Future<void> updateWorkStatus(int workId, String status) async {
     await _client.from('Works').update({
       'status': status,
     }).eq('id', workId);
   }
 
-  // Check mechanic availability
   Future<bool> isMechanicAvailable(int mechanicId, String date, String time) async {
     final works = await _client.from('Works').select().eq('mechanic_id', mechanicId).eq('date', date);
 
@@ -125,7 +119,6 @@ class WorkloadController {
     return true; // Mechanic is available
   }
 
-  // Fetch workload details for a specific workerId
   Future<WorkloadModel?> fetchWorkloadDetails(int workerId) async {
     final works = await _client.from('Works').select().eq('mechanic_id', workerId);
     final mechanics = await _client.from('Mechanics').select();
@@ -145,7 +138,7 @@ class WorkloadController {
       vehicleId: vehicle['id'],
       vehicleMake: vehicle['make'],
       vehicleModel: vehicle['model'],
-      vehicleVIN: vehicle['vin'], // Include VIN field
+      vehicleVIN: vehicle['vin'],
       customerName: customer['name'],
       date: work['date'],
       time: work['time'],

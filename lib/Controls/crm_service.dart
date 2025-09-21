@@ -197,7 +197,6 @@ class CrmService {
     }
   }
 
-  // Customer review operations
   Future<List<CustomerReview>> getCustomerReviews(String customerId) async {
     try {
       final response = await _client
@@ -249,7 +248,6 @@ class CrmService {
     }
   }
 
-  // Search customers
   Future<List<Customer>> searchCustomers(String query) async {
     try {
       final response = await _client
@@ -264,7 +262,6 @@ class CrmService {
     }
   }
 
-  // Get customer with vehicle info
   Future<Map<String, dynamic>?> getCustomerWithVehicleInfo(String customerId) async {
     try {
       final response = await _client
@@ -279,12 +276,10 @@ class CrmService {
     }
   }
 
-  // Get service history for a customer
   Future<List<ServiceHistory>> getCustomerServiceHistory(String customerId) async {
     try {
       print('Fetching service history for customer ID: $customerId');
 
-      // First get customer vehicles
       final vehicles = await getCustomerVehicles(customerId);
 
       if (vehicles.isEmpty) {
@@ -294,12 +289,10 @@ class CrmService {
 
       List<ServiceHistory> allServiceHistory = [];
 
-      // Get service history for each vehicle
       for (final vehicle in vehicles) {
         final vehicleId = vehicle['id']?.toString();
         if (vehicleId != null) {
           try {
-            // Join Works with Mechanics to get mechanic names
             final response = await _client
                 .from('Works')
                 .select('''
@@ -335,12 +328,9 @@ class CrmService {
             }
           } catch (e) {
             print('Error fetching service history for vehicle $vehicleId: $e');
-            // Continue with other vehicles even if one fails
           }
         }
       }
-
-      // Sort all service history by date (newest first)
       allServiceHistory.sort((a, b) => b.date.compareTo(a.date));
 
       print('Found ${allServiceHistory.length} service history records for customer');
